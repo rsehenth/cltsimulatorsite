@@ -8,17 +8,7 @@ const { status, wordmark } = game;
 <header class="cover" id="topo">
   <div class="cover__inner wrap">
     <a class="brand" href="#home" aria-label={`${game.name} — ir para o topo`}>
-      <img
-        src="/assets/branding/clt-mark.png"
-        width="440"
-        height="220"
-        alt=""
-        aria-hidden="true"
-        class="brand__mark"
-      />
-      <span class="brand__text">
-        <span class="brand__name">{wordmark.first} <em>{wordmark.second}</em></span>
-      </span>
+      <span class="brand__name">{wordmark.first} <em>{wordmark.second}</em></span>
     </a>
 
     <nav class="nav" aria-label="Seções do site">
@@ -77,21 +67,8 @@ const { status, wordmark } = game;
   .brand {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
     text-decoration: none;
     flex: none;
-  }
-
-  .brand__mark {
-    width: 3.5rem;
-    height: auto;
-    filter: drop-shadow(0 2px 0 rgba(3, 9, 16, 0.6));
-  }
-
-  .brand__text {
-    display: grid;
-    gap: 0.15rem;
-    min-width: 0;
   }
 
   .brand__name {
@@ -230,10 +207,6 @@ const { status, wordmark } = game;
   }
 
   @media (max-width: 420px) {
-    .brand__mark {
-      width: 2.75rem;
-    }
-
     .brand__name {
       font-size: 1.125rem;
     }

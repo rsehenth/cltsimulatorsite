@@ -4,7 +4,9 @@
 #
 # Como o build foi verificado (npm run build + inspeção de dist/):
 #   - 0 atributos style="" no HTML  -> style-src dispensa 'unsafe-inline'
-#   - 2 scripts, ambos de /js/ same-origin -> script-src 'self'
+#     (motion.js escreve variáveis de progresso por CSSOM, el.style.setProperty,
+#      que a CSP não filtra; quem ela filtra é o atributo style na marcação)
+#   - 3 scripts, todos de /js/ same-origin -> script-src 'self'
 #   - 0 requisições a terceiros, 0 webfont, 0 data URI
 #   - <script type="application/ld+json"> é bloco de dados, não executável,
 #     e por isso não é afetado por script-src

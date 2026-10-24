@@ -70,4 +70,38 @@ const status = 'Protótipo funcional';
     background: var(--green);
     box-shadow: 0 0 0 3px var(--ink);
   }
+
+  /* A espinha se desenha com o scroll: o trilho fica apagado e o preenchimento
+     sobe por scaleY — nunca por altura, que mexeria no layout. Só existe com
+     JavaScript disponível e movimento permitido; sem isso o gradiente acima é
+     o estado final e o visitante não perde nada. */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .timeline__spine::before {
+      background: var(--line-soft);
+    }
+
+    html.js .timeline__spine::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 4px;
+      background: linear-gradient(180deg, var(--green), var(--gold-deep)); /* taste-skill-ignore: mesmo medidor do trilho fixo */
+      transform: scaleY(var(--spine-p, 0));
+      transform-origin: top center;
+      will-change: transform;
+    }
+
+    html.js .timeline__step::before {
+      transition: background-color var(--dur-settle) var(--ease-glide),
+        box-shadow var(--dur-settle) var(--ease-glide);
+    }
+
+    html.js .timeline__step.is-passed::before {
+      background: var(--gold);
+      box-shadow: 0 0 0 3px var(--ink), /* taste-skill-ignore: anel de tinta, sem blur — é chanfro, não elevação */
+        0 0 0 5px color-mix(in srgb, var(--gold) 32%, transparent);
+    }
+  }
 </style>

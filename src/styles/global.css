@@ -254,7 +254,7 @@ svg {
   --status: var(--gold);
 }
 .status--planned {
-  --status: var(--gold-deep);
+  --status: var(--gold-planned);
 }
 
 /* ---------- Ações ---------- */
@@ -321,10 +321,14 @@ svg {
   color: var(--link-on-paper);
 }
 
-/* Perfuração: a linha de pontos onde a folha se destacava do bloco. */
+/* Perfuração: a linha de pontos onde a folha se destacava do bloco.
+   É ela que fecha e abre a costura entre duas seções, então o respiro da
+   costura conta uma vez só — metade de um `--section-space` de cada lado.
+   As margens próprias somadas aos paddings das seções vizinhas formavam
+   uma tela quase vazia no meio da página. */
 .perforation {
   height: 12px;
-  margin-block: clamp(2rem, 5vw, 3.5rem);
+  margin-block: calc(var(--section-space) / 2);
   border: 0;
   background-image: radial-gradient(circle, var(--line) 2.5px, rgba(0, 0, 0, 0) 2.6px);
   background-size: 18px 12px;
@@ -381,6 +385,45 @@ svg {
   height: var(--icon);
 }
 
+/* ---------- Barra de progresso do sistema ---------- */
+
+/* Vive no topo porque o cabeçalho fixo já usa a linha de baixo como filete
+   de capa. Aparece apenas com .js no <html>: sem script não há progresso a
+   mostrar, e um trilho vazio no topo seria ruído. */
+.sysbar {
+  display: none;
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--edge);
+  z-index: 60;
+  background: var(--line-soft);
+  pointer-events: none;
+}
+
+html.js .sysbar {
+  display: block;
+}
+
+.sysbar__fill {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.sysbar__label {
+  position: absolute;
+  top: calc(var(--edge) + 0.35rem);
+  right: var(--gutter);
+  font-family: var(--font-data);
+  font-size: var(--fs-data);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
 /* ---------- Movimento de entrada ---------- */
 
 .reveal {
@@ -391,26 +434,26 @@ svg {
 .reveal.is-in {
   opacity: 1;
   translate: 0 0;
-  transition: opacity var(--dur-slow) var(--ease) var(--d, 0ms),
-    translate var(--dur-slow) var(--ease) var(--d, 0ms);
+  transition: opacity var(--dur-boot) var(--ease-glide) var(--d, 0ms),
+    translate var(--dur-boot) var(--ease-glide) var(--d, 0ms);
 }
 
 /* Escalonamento aplicado por classe (nunca por style inline),
    para que a CSP mantenha style-src apenas em 'self'. */
 .is-d1 {
-  --d: 70ms;
+  --d: 100ms;
 }
 
 .is-d2 {
-  --d: 140ms;
+  --d: 200ms;
 }
 
 .is-d3 {
-  --d: 210ms;
+  --d: 300ms;
 }
 
 .is-d4 {
-  --d: 280ms;
+  --d: 400ms;
 }
 
 /* O script é quem aplica .reveal: sem JavaScript o conteúdo

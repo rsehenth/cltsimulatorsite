@@ -27,6 +27,10 @@
   /* --- Tintas --- */
   --gold: #f2b53c;
   --gold-deep: #a97a1c;
+  /* Ouro do selo "planejado": o mesmo metal, claro o bastante para o rótulo
+     de 13px passar em 4,5:1 sobre qualquer um dos quatro fundos (--ink,
+     --panel, --panel-in, --plate). --gold-deep aí fica em 4,4:1. */
+  --gold-planned: #bd8b22;
   --cyan: #5ecfe0;
   --green: #5fd08a;
   --coral: #ef6a5a;
@@ -102,7 +106,14 @@
   /* --- Movimento --- */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur: 240ms;
-  --dur-slow: 420ms;
+
+  /* Movimento ligado a scroll: cauda longa, sem quique. Vale também para o
+     reveal de entrada, que a 420 ms era lido como "seco" nesta página; a
+     família abaixo é a dos efeitos que o visitante acompanha com o olho
+     (--dur-boot nunca fica abaixo de 1 s). */
+  --ease-glide: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-boot: 1100ms;
+  --dur-settle: 450ms;
 
   /* --- Foco --- */
   --focus: 3px solid var(--cyan);
@@ -116,6 +127,29 @@
     --icon-lg: 112px;
     --fs-body: 1.1875rem;
     --fs-hero: clamp(2.5rem, 5.4vw, 5.5rem);
+  }
+}
+
+/* Desktop grande: aqui o hero precisa mandar na primeira dobra, não só caber.
+   Sem crescer o herói, 2560 px fica com 3,4vw de título — e o inspetor marca
+   "nenhum elemento dominante". Vale de 2000 a 2399 px; acima disso o teto da
+   próxima regra assume e a largura do título é decidida por outra regra. */
+@media (min-width: 2000px) {
+  :root {
+    --page-max: 1600px;
+    --fs-hero: clamp(3.5rem, 5.2vw, 7rem);
+  }
+}
+
+@media (min-width: 2400px) {
+  :root {
+    --page-max: 1800px;
+    /* Teto em 120px: acima disso "BEM-VINDO À" não cabe em duas linhas na
+       coluna do herói, e título em três linhas é defeito — hero pequeno em
+       monitor ultra largo é gosto. A segunda regra ganha: de ~2670 px para
+       cima o inspetor volta a marcar "nenhum elemento dominante", aceito e
+       registrado em docs/DECISIONS.md. */
+    --fs-hero: clamp(4rem, 4.9vw, 7.5rem);
   }
 }
 

@@ -7,7 +7,7 @@
 | Gerador de páginas | Astro 7.4, saída estática (`astro build`) | Uma página institucional de jogo: o HTML pronto no build é o menor custo e o menor risco |
 | Linguagem | TypeScript strict (`astro/tsconfigs/strict`) + tipos de template pelo `astro check` | O conteúdo é tipado; status inconsistente não compila |
 | Estilo | CSS próprio com tokens (`src/styles/tokens.css`) + CSS com escopo por componente | Identidade própria; nenhum framework de UI aparece no HTML |
-| Interatividade | ~2,4 KB de JavaScript vanilla em `public/js/` | Duas melhorias progressivas; nada no site depende de script para ser lido |
+| Interatividade | ~3,5 KB de JavaScript vanilla (brotli) em `public/js/` | Três melhorias progressivas; nada no site depende de script para ser lido |
 | Fontes | Famílias do sistema | Zero requisição externa, zero flash de reflow, sem dependência de CDN |
 | Ícones | Pixel art em `<symbol>`/`<use>`, gerada no build | Uma grade 16×16 desenhada uma vez; nítida em qualquer escala; nenhum emoji |
 | Dependências | `astro`, `@astrojs/check`, `@astrojs/sitemap`, `typescript` (todas dev) | Sem runtime de terceiros no navegador |
@@ -20,18 +20,19 @@ Não há React, Vue, Svelte nem biblioteca de animação.
 
 ```
 dist/
-  index.html                     87,5 KB bruto · 11,5 KB brotli
-  _astro/index.<hash>.css        46,1 KB bruto · 7,7 KB brotli
-  js/reveal.js                    1,3 KB
-  js/ficha.js                     1,1 KB
+  index.html                     87,6 KB bruto · 11,6 KB brotli
+  _astro/index.<hash>.css        49,6 KB bruto · 8,2 KB brotli
+  js/reveal.js                    1,3 KB · 0,6 KB brotli
+  js/motion.js                    6,4 KB · 2,3 KB brotli
+  js/ficha.js                     1,3 KB · 0,6 KB brotli
   assets/branding/clt-logo.png   51,0 KB
   assets/branding/clt-mark.png   19,2 KB
   favicon.svg · robots.txt · _headers
 ```
 
-Uma página, nove arquivos, 209.075 B (~204 KB) no total — dos quais ≈19 KB comprimidos entre HTML e
-CSS. Estes números são do build medido em 2026-10-24; se mudarem, atualize esta linha e a baseline de
-`DECISIONS.md` em vez de deixar o texto antigo valer como promessa.
+Uma página, dez arquivos, 219.276 B (~219 KB) no total — dos quais 23,4 KB comprimidos entre HTML,
+CSS e os três scripts. Estes números são do build medido em 2026-10-24; se mudarem, atualize esta linha
+e a baseline de `DECISIONS.md` em vez de deixar o texto antigo valer como promessa.
 `astro.config.mjs` usa `build.inlineStylesheets: 'auto'`: o CSS pequeno fica embutido no HTML e o
 grande sai como arquivo com hash — decisão tomada pelo Astro, não uma escolha manual.
 
@@ -97,7 +98,8 @@ Cada componente traz o próprio `<style>` com escopo; os utilitários compartilh
 
 - `public/assets/branding/clt-logo.png` (960×480) e `clt-mark.png` (440×220): arte oficial do
   projeto, copiada do material do jogo para dentro deste site. Os originais em `E:\RDImortal`
-  permanecem intactos e verificados por hash.
+  permanecem intactos e verificados por hash. O brasão (`clt-mark`) aparece na contracapa do rodapé;
+  o cabeçalho fixo usa só o nome tipográfico — ver `DECISIONS.md` §23.
 - `favicon.svg` é vetor; `robots.txt` libera o index e deixa a linha de sitemap comentada até existir
   domínio.
 - Não há captura de tela do jogo autorizada. A galeria (`Gallery.astro`) renderiza o estado
@@ -105,14 +107,21 @@ Cada componente traz o próprio `<style>` com escopo; os utilitários compartilh
   imagem inventada. `src/data/game.ts` → `gallery` aceita `src?`; publicar uma imagem é preencher o
   campo.
 
-## JavaScript: duas melhorias progressivas, ambas externas
+## JavaScript: três melhorias progressivas, todas externas
 
 | Arquivo | Faz | Sem ele |
 | --- | --- | --- |
-| `public/js/reveal.js` | `IntersectionObserver` adiciona `.reveal` + `.is-visible` e o escalonamento `.is-d1…d4` | Todo o conteúdo já está no HTML, visível |
+| `public/js/reveal.js` | `IntersectionObserver` adiciona `.reveal` + `.is-in` e o escalonamento `.is-d0…d4` | Todo o conteúdo já está no HTML, visível |
+| `public/js/motion.js` | Liga `.js` no `<html>` e escreve por CSSOM os progressos suavizados por lerp (`--spine-p` da timeline, `--p` da barra de sistema, `--tilt-x/--tilt-y` dos painéis); acende `.is-passed` e `.is-boot` | A barra de sistema não existe, a linha da timeline fica o gradiente fixo do trilho, nada se oculta |
 | `public/js/ficha.js` | Cria o botão "Carimbar candidatura" e o contador da ficha; o carimbo "Sem vagas" existe no HTML | A ficha continua legível, sem botão |
 
-Os dois entram com `<script is:inline defer src="…">`. São arquivos separados de propósito:
+`motion.js` é o único dono do movimento ligado a progresso: um listener de `scroll` passivo, um
+`resize`, um `requestAnimationFrame` compartilhado e um `IntersectionObserver` que atende a espinha e o
+painel de status. Cada valor exibido persegue o alvo (lerp) em vez de saltar. Ele não duplica o observer
+de `reveal.js` — um trata de entrada de conteúdo, o outro de progresso — e não escreve `<style>` nem
+`style=""`: só `element.style.setProperty()`, que a CSP não filtra.
+
+Os três entram com `<script is:inline defer src="…">`. São arquivos separados de propósito:
 scripts embutidos exigiriam `'unsafe-inline'` (ou hash por build) na CSP. Como o Astro 7 já embute
 `<script>` de bundle como módulo inline, a única forma de manter `script-src 'self'` limpo é servir o
 JS por URL — e é exatamente isso que `public/_headers` declara.

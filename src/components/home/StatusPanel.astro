@@ -199,4 +199,18 @@ const readouts = [
       display: none;
     }
   }
+
+  /* O painel liga do centro para fora quando entra na tela — é a janela do
+     WinTário abrindo, não um fade genérico. Abre em inset(-12px) para não
+     recortar a cantoneira nem a sombra de 6 px. */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .hud__panel {
+      clip-path: inset(50% -12px 50% -12px);
+      transition: clip-path var(--dur-boot) var(--ease-glide);
+    }
+
+    html.js .hud__panel.is-boot {
+      clip-path: inset(-12px);
+    }
+  }
 </style>
