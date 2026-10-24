@@ -1,0 +1,95 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PixelSpriteSheet from '../components/ui/PixelSpriteSheet.astro';
+import { game } from '../data/game';
+import type { SpriteName } from '../data/sprites';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Nomes de sprites usados na página; a folha é gerada só para eles. */
+  sprites?: readonly SpriteName[];
+}
+
+const {
+  title = game.seo.title,
+  description = game.seo.description,
+  sprites = [],
+} = Astro.props;
+
+/* URL canônica só existe quando o domínio público foi configurado. */
+const site = Astro.site?.origin ?? '';
+const canonical = site ? new URL(Astro.url.pathname, site).href : '';
+const ogImage = site ? new URL(game.seo.ogImage, site).href : game.seo.ogImage;
+const isDev = import.meta.env.DEV;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#081426" />
+    <meta name="color-scheme" content="dark" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={game.name} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="Logotipo pixel art de CLT Simulator: Carteira de Trabalho, sem vagas." />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {isDev && <meta name="robots" content="noindex" />}
+
+    {/* Metadados básicos do jogo. Sem URLs, datas ou plataformas que não existem.
+        O `<` sai escapado porque este bloco é injerido cru dentro de um <script>:
+        um "<" vindo de src/data poderia fechar a tag e virar código na página. */}
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'VideoGame',
+        name: game.name,
+        description: game.seo.description,
+        genre: ['Simulation', 'Indie'],
+        inLanguage: 'pt-BR',
+        playMode: 'SinglePlayer',
+        isAccessibleForFree: true,
+        ...(canonical ? { url: canonical } : {}),
+      }).replace(/</g, '\\u003c')}></script>
+  </head>
+
+  <body>
+    <PixelSpriteSheet names={sprites} />
+
+    <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+
+    <Header />
+
+    <main id="conteudo">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!--
+      Script externo, não inline: assim a Content-Security-Policy pode
+      manter script-src 'self' sem abrir espaço para código embutido.
+      O comportamento é melhoria progressiva (veja public/js/reveal.js).
+    -->
+    <script is:inline defer src="/js/reveal.js"></script>
+  </body>
+</html>

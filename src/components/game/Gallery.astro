@@ -1,0 +1,138 @@
+---
+import { gallery, type GalleryEntry } from '../../data/game';
+import PixelIcon from '../ui/PixelIcon.astro';
+
+/**
+ * Só renderiza <img> quando o arquivo foi informado nos dados.
+ * Entradas sem imagem viram prancha de prévia pendente — nunca quadro quebrado.
+ */
+const entries: GalleryEntry[] = gallery;
+const ready = entries.filter((entry) => Boolean(entry.src));
+---
+
+<figure class="gallery" aria-labelledby="gallery-title">
+  <figcaption class="gallery__head">
+    <h3 class="gallery__title" id="gallery-title">Prévia do que está sendo construído</h3>
+    <p class="gallery__note">
+      {
+        ready.length > 0
+          ? `${ready.length} captura${ready.length > 1 ? 's' : ''} do protótipo no ar.`
+          : 'Ainda não publicamos capturas do protótipo. As cenas abaixo já existem no jogo e entram aqui assim que as imagens estiverem prontas.'
+      }
+    </p>
+  </figcaption>
+
+  <ul class="gallery__grid">
+    {
+      entries.map((entry) => (
+        <li class="gallery__cell" data-reveal>
+          {entry.src ? (
+            <img
+              src={entry.src}
+              width={entry.width ?? 640}
+              height={entry.height ?? 360}
+              alt={`${entry.title} — captura do protótipo de CLT Simulator`}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <span class="gallery__plate" aria-hidden="true">
+              <PixelIcon name={entry.icon} />
+            </span>
+          )}
+          <span class="gallery__label">
+            <strong>{entry.title}</strong>
+            <span class="gallery__desc">{entry.note}</span>
+            <span class="gallery__status">{entry.src ? 'Disponível' : 'Prévia a caminho'}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</figure>
+
+<style>
+  .gallery {
+    margin: 0;
+  }
+
+  .gallery__head {
+    margin-bottom: 1.5rem;
+  }
+
+  .gallery__title {
+    font-size: var(--fs-title);
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .gallery__note {
+    margin-top: 0.5rem;
+    max-width: 34rem;
+    color: var(--steel);
+  }
+
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: var(--gap);
+  }
+
+  .gallery__cell {
+    display: grid;
+    background: var(--panel-in);
+    border: var(--edge) solid var(--line-soft);
+  }
+
+  .gallery__cell img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  /* Estado de prévia: uma tela desligada, não uma imagem faltando. */
+  .gallery__plate {
+    --icon: var(--icon-md);
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.025) 0 1px,
+        rgba(255, 255, 255, 0) 1px 4px
+      ),
+      var(--plate);
+    opacity: 0.9;
+  }
+
+  .gallery__label {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.7rem 0.85rem;
+    border-top: var(--edge) solid var(--line-soft);
+  }
+
+  .gallery__label strong {
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 620;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .gallery__desc {
+    font-size: var(--fs-note);
+    line-height: 1.4;
+    color: var(--text-soft);
+  }
+
+  .gallery__status {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+</style>

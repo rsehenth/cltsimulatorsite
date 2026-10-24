@@ -1,0 +1,33 @@
+---
+import { aiNote } from '../../data/game';
+---
+
+<aside class="ainote" aria-labelledby="ainote-title">
+  <p class="ainote__title" id="ainote-title">{aiNote.title}</p>
+  <p class="ainote__text">{aiNote.text}</p>
+</aside>
+
+<style>
+  .ainote {
+    display: grid;
+    gap: 0.6rem;
+    max-width: var(--sheet-max);
+    margin-top: clamp(2rem, 4.5vw, 3rem);
+    padding: clamp(1.1rem, 2.6vw, 1.75rem) 0 clamp(1.1rem, 2.6vw, 1.75rem) clamp(1.1rem, 2.6vw, 1.75rem);
+    border-left: 4px solid var(--cyan);
+  }
+
+  .ainote__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 620;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  .ainote__text {
+    max-width: 68ch;
+    color: var(--text-soft);
+  }
+</style>

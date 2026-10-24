@@ -1,0 +1,94 @@
+---
+import type { RoadmapItem } from '../../data/roadmap';
+import PixelIcon from '../ui/PixelIcon.astro';
+import StatusBadge from '../ui/StatusBadge.astro';
+
+interface Props {
+  item: RoadmapItem;
+}
+
+const { item } = Astro.props;
+---
+
+<article class="front" data-reveal>
+  <div class="front__panel cornered">
+    <span class="front__plate plate plate--md"><PixelIcon name={item.icon} /></span>
+    <div class="front__body">
+      <h4 class="front__title">{item.title}</h4>
+      <p class="front__text">{item.text}</p>
+      <ul class="ticked ticked--green front__items">
+        {item.items.map((line) => <li>{line}</li>)}
+      </ul>
+    </div>
+    <StatusBadge status={item.status} />
+  </div>
+</article>
+
+<style>
+  .front__panel {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1.15rem;
+    align-items: start;
+    padding: clamp(1rem, 2.2vw, 1.5rem);
+    background: linear-gradient(178deg, var(--panel) 0%, var(--panel-in) 100%);
+    border: var(--edge) solid var(--line);
+    box-shadow: var(--offset-sm);
+  }
+
+  .front__plate {
+    padding: 6px;
+  }
+
+  .front__title {
+    font-size: var(--fs-title);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .front__text {
+    margin-top: 0.4rem;
+    max-width: 52ch;
+    color: var(--text-soft);
+  }
+
+  .front__items {
+    margin-top: 0.85rem;
+    columns: 2;
+    column-gap: 1.75rem;
+  }
+
+  .front__items li {
+    break-inside: avoid;
+  }
+
+  .front__panel :global(.status) {
+    align-self: start;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 820px) {
+    .front__panel {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .front__panel :global(.status) {
+      grid-column: 2;
+    }
+
+    .front__items {
+      columns: 1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .front__panel {
+      grid-template-columns: 1fr;
+    }
+
+    .front__panel :global(.status) {
+      grid-column: 1;
+    }
+  }
+</style>

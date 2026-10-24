@@ -1,0 +1,73 @@
+---
+import { builtFronts } from '../../data/roadmap';
+import RoadmapCard from './RoadmapCard.astro';
+
+const status = 'Protótipo funcional';
+---
+
+<div class="timeline">
+  <p class="timeline__status">
+    <span class="status status--done">{status}</span>
+    <span class="timeline__hint">Entregue dentro do protótipo — não necessariamente finalizado para a versão comercial.</span>
+  </p>
+
+  <ol class="timeline__spine">
+    {
+      builtFronts.map((item) => (
+        <li class="timeline__step">
+          <RoadmapCard item={item} />
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .timeline__status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+  }
+
+  .timeline__hint {
+    font-size: var(--fs-note);
+    color: var(--steel);
+    max-width: 44ch;
+  }
+
+  .timeline__spine {
+    position: relative;
+    display: grid;
+    gap: clamp(1rem, 2.2vw, 1.6rem);
+    padding-left: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  /* A espinha do tempo: uma barra sólida, não um fio de um pixel. */
+  .timeline__spine::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 4px;
+    background: linear-gradient(180deg, var(--green), var(--gold-deep));
+  }
+
+  .timeline__step {
+    position: relative;
+    list-style: none;
+  }
+
+  .timeline__step::before {
+    content: "";
+    position: absolute;
+    left: calc(-1 * clamp(1.75rem, 4vw, 3rem) - 3px);
+    top: 2.2rem;
+    width: 10px;
+    height: 10px;
+    background: var(--green);
+    box-shadow: 0 0 0 3px var(--ink);
+  }
+</style>

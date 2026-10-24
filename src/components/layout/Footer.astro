@@ -1,0 +1,180 @@
+---
+import { game } from '../../data/game';
+import { navigation } from '../../data/navigation';
+import { validLinks } from '../../data/social';
+
+const social = validLinks();
+const year = new Date().getFullYear();
+---
+
+<footer class="backcover">
+  <div class="wrap backcover__inner">
+    <div class="backcover__id">
+      <img src="/assets/branding/clt-mark.png" width="440" height="220" alt="" aria-hidden="true" class="backcover__mark" />
+      <p class="backcover__name">{game.wordmark.first} <em>{game.wordmark.second}</em></p>
+      <p class="backcover__line">{game.status.label} · {game.status.detail}</p>
+      <p class="backcover__line backcover__line--gold">{game.demo.label}</p>
+    </div>
+
+    <nav class="backcover__nav" aria-label="Voltar para uma seção">
+      <p class="backcover__head">O site</p>
+      <ul>
+        {navigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        <li><a href="#topo">Voltar ao topo</a></li>
+      </ul>
+    </nav>
+
+    <div class="backcover__social">
+      <p class="backcover__head">Onde acompanhar</p>
+      {
+        social.length > 0 ? (
+          <ul>
+            {social.map((link) => (
+              <li>
+                <a href={link.url} rel="noopener noreferrer" target="_blank">{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="backcover__pending">
+            Nenhum canal oficial está publicado ainda. As URLs entram aqui a partir de
+            <code>src/data/social.ts</code>.
+          </p>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="backcover__rule" aria-hidden="true"></div>
+
+  <div class="wrap backcover__base">
+    <p>© {year} {game.name}. Projeto independente em desenvolvimento.</p>
+    <p>{game.demo.note}</p>
+  </div>
+</footer>
+
+<style>
+  .backcover {
+    margin-top: var(--section-space);
+    border-top: var(--edge) solid var(--line);
+    background: linear-gradient(180deg, rgba(18, 40, 63, 0.55), rgba(5, 14, 27, 0.9));
+  }
+
+  .backcover__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .backcover__mark {
+    width: 5.5rem;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .backcover__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-title);
+    font-weight: 640;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .backcover__name em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .backcover__line {
+    margin-top: 0.6rem;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .backcover__line--gold {
+    color: var(--gold);
+  }
+
+  .backcover__head {
+    margin-bottom: 0.9rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 620;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  .backcover__nav ul,
+  .backcover__social ul {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .backcover__nav a,
+  .backcover__social a {
+    color: var(--text);
+    text-decoration-color: var(--line);
+    text-underline-offset: 0.25em;
+  }
+
+  .backcover__nav a:hover,
+  .backcover__social a:hover {
+    color: var(--gold);
+  }
+
+  .backcover__pending {
+    max-width: 34ch;
+    font-size: var(--fs-note);
+    color: var(--steel);
+  }
+
+  .backcover__pending code {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    color: var(--cyan);
+  }
+
+  .backcover__rule {
+    height: var(--edge);
+    background: linear-gradient(90deg, var(--gold) 0 22%, rgba(242, 181, 60, 0.12) 22% 52%, var(--cyan) 52% 74%, rgba(94, 207, 224, 0.1) 74% 100%);
+  }
+
+  .backcover__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    padding-block: 1.1rem 1.4rem;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.06em;
+    color: var(--steel-dim);
+  }
+
+  @media (max-width: 860px) {
+    .backcover__inner {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .backcover__id {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .backcover__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .backcover__base {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,225 @@
+---
+import { plannedFronts, nextMilestone, counts } from '../../data/roadmap';
+import PixelIcon from '../ui/PixelIcon.astro';
+---
+
+<div class="planned">
+  <p class="planned__warn">
+    <span class="status status--planned">Planejado / não implementado</span>
+    <span class="planned__warn-text">Nada desta lista funciona hoje no protótipo.</span>
+  </p>
+
+  <ul class="planned__list">
+    {
+      plannedFronts.map((front) => (
+        <li class="planned__row" data-reveal>
+          <span class="planned__icon plate plate--sm"><PixelIcon name={front.icon} /></span>
+          <span class="planned__name">{front.title}</span>
+          <span class="planned__leader" aria-hidden="true"></span>
+          <span class="planned__state">Planejado</span>
+          <p class="planned__text">{front.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <article class="milestone cornered" data-reveal>
+    <span class="milestone__plate plate plate--lg"><PixelIcon name={nextMilestone.icon} /></span>
+    <div class="milestone__body">
+      <p class="milestone__kicker">Próximo grande marco</p>
+      <h4 class="milestone__title">{nextMilestone.title}</h4>
+      <p class="milestone__text">{nextMilestone.text}</p>
+      <ul class="ticked ticked--gold milestone__items">
+        {nextMilestone.items.map((line) => <li>{line}</li>)}
+      </ul>
+    </div>
+    <div class="milestone__side">
+      <span class="milestone__num" aria-hidden="true">{counts.planned}</span>
+      <span class="milestone__of">de {counts.planned} frentes</span>
+      <span class="status status--planned">Planejado</span>
+    </div>
+  </article>
+</div>
+
+<style>
+  .planned__warn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+  }
+
+  .planned__warn-text {
+    font-size: var(--fs-note);
+    color: var(--coral);
+  }
+
+  /* Lista de espera do cartório: nome, linha de pontos, situação. */
+  .planned__list {
+    display: grid;
+    gap: 0;
+    border-block: var(--edge) solid var(--line);
+  }
+
+  .planned__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, auto) minmax(2rem, 1fr) auto;
+    grid-template-areas:
+      'icon name leader state'
+      '.    text text  text';
+    align-items: center;
+    gap: 0.35rem 1rem;
+    padding: 1rem 0.25rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .planned__row:last-child {
+    border-bottom: 0;
+  }
+
+  .planned__icon {
+    grid-area: icon;
+    padding: 4px;
+  }
+
+  .planned__name {
+    grid-area: name;
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 620;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .planned__leader {
+    grid-area: leader;
+    height: 4px;
+    align-self: center;
+    background-image: radial-gradient(circle, var(--line) 2px, rgba(0, 0, 0, 0) 2.1px);
+    background-size: 10px 4px;
+    background-repeat: repeat-x;
+    background-position: left center;
+  }
+
+  .planned__state {
+    grid-area: state;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    white-space: nowrap;
+  }
+
+  .planned__text {
+    grid-area: text;
+    max-width: 62ch;
+    color: var(--steel);
+  }
+
+  /* ---------- Marco ---------- */
+
+  .milestone {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: center;
+    margin-top: clamp(1.75rem, 4vw, 2.75rem);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: var(--edge) solid var(--gold-deep);
+    background: linear-gradient(100deg, rgba(242, 181, 60, 0.14) 0%, rgba(18, 40, 63, 0.92) 34%, var(--panel-in) 100%);
+    box-shadow: var(--offset);
+  }
+
+  .milestone__kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .milestone__kicker::before {
+    content: "";
+    width: 22px;
+    height: 3px;
+    background: var(--gold);
+  }
+
+  .milestone__title {
+    margin-top: 0.5rem;
+    font-size: var(--fs-lead);
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .milestone__text {
+    margin-top: 0.6rem;
+    max-width: 52ch;
+    color: var(--text-soft);
+  }
+
+  .milestone__items {
+    margin-top: 1rem;
+  }
+
+  .milestone__side {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    padding: 1rem 1.25rem;
+    border: var(--edge) solid var(--gold-deep);
+    background: rgba(6, 17, 31, 0.62);
+    text-align: center;
+  }
+
+  .milestone__num {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 0.9;
+    color: var(--gold);
+  }
+
+  .milestone__of {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  @media (max-width: 900px) {
+    .milestone {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .milestone__side {
+      grid-column: 1 / -1;
+      grid-auto-flow: column;
+      align-items: center;
+      justify-content: start;
+      gap: 1.25rem;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .planned__row {
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-areas:
+        'icon name'
+        '.    state'
+        '.    text';
+    }
+
+    .planned__leader {
+      display: none;
+    }
+  }
+</style>

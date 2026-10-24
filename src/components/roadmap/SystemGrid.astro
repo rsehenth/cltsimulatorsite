@@ -1,0 +1,151 @@
+---
+import { systemAreas, counts } from '../../data/roadmap';
+import { STATUS_LABEL } from '../../data/game';
+import PixelIcon from '../ui/PixelIcon.astro';
+---
+
+<div class="systems">
+  <div class="systems__bar">
+    <span class="systems__bar-title">painel_de_sistemas</span>
+    <span class="systems__bar-count">{counts.systems} áreas</span>
+  </div>
+
+  <ul class="systems__grid">
+    {
+      systemAreas.map((area) => (
+        <li class={`systems__cell systems__cell--${area.status}`} data-reveal>
+          <span class="systems__icon plate plate--sm"><PixelIcon name={area.icon} /></span>
+          <span class="systems__name">{area.title}</span>
+          <span class="systems__status">{STATUS_LABEL[area.status]}</span>
+          <ul class="systems__items">
+            {area.items.map((line) => <li>{line}</li>)}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="systems__foot">
+    Objetivo central do protótipo: conseguir um emprego. A classificação acima é a do HTML de roadmap do projeto.
+  </p>
+</div>
+
+<style>
+  .systems {
+    border: var(--edge) solid var(--line);
+    background: var(--panel-in);
+    box-shadow: var(--offset);
+  }
+
+  .systems__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--plate);
+    border-bottom: var(--edge) solid var(--line);
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  .systems__bar-count {
+    color: var(--gold);
+  }
+
+  .systems__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1px;
+    background: var(--line-soft);
+  }
+
+  .systems__cell {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'icon name'
+      'icon status'
+      '.    items';
+    gap: 0.15rem 0.8rem;
+    align-items: center;
+    padding: clamp(0.9rem, 2vw, 1.25rem);
+    background: var(--panel-in);
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .systems__cell--active {
+    --tone: var(--cyan);
+  }
+
+  .systems__cell--proto {
+    --tone: var(--gold);
+  }
+
+  .systems__cell--base {
+    --tone: var(--steel);
+  }
+
+  @media (hover: hover) {
+    .systems__cell:hover {
+      background: var(--panel);
+    }
+  }
+
+  .systems__icon {
+    grid-area: icon;
+    align-self: start;
+    padding: 4px;
+  }
+
+  .systems__name {
+    grid-area: name;
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 620;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .systems__status {
+    grid-area: status;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tone);
+  }
+
+  .systems__status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    flex: none;
+    background: var(--tone);
+  }
+
+  .systems__items {
+    grid-area: items;
+    display: grid;
+    gap: 0.2rem;
+    margin-top: 0.6rem;
+    font-size: var(--fs-note);
+    line-height: 1.45;
+    color: var(--steel);
+  }
+
+  .systems__foot {
+    padding: 0.85rem 1rem;
+    border-top: var(--edge) solid var(--line-soft);
+    background: rgba(6, 17, 31, 0.55);
+    font-size: var(--fs-note);
+    color: var(--steel);
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import { STATUS_LABEL, type WorkStatus } from '../../data/game';
+
+interface Props {
+  status: WorkStatus;
+  label?: string;
+}
+
+const { status, label = STATUS_LABEL[status] } = Astro.props;
+---
+
+<span class={`status status--${status}`}>{label}</span>

@@ -1,0 +1,120 @@
+---
+import { game } from '../../data/game';
+import PixelIcon from '../ui/PixelIcon.astro';
+
+const { demo } = game;
+---
+
+<section class="beacon" aria-labelledby="beacon-title">
+  <div class="wrap beacon__inner">
+    <div class="beacon__text">
+      <p class="beacon__kicker">{demo.kicker}</p>
+      <h3 class="beacon__title" id="beacon-title">Demo {demo.year}</h3>
+      <p class="beacon__desc">{demo.description}</p>
+    </div>
+
+    <div class="beacon__year" aria-hidden="true">
+      <span class="beacon__year-num">{demo.year}</span>
+      <span class="beacon__year-icon"><PixelIcon name="sparkle" /></span>
+    </div>
+  </div>
+
+  <p class="wrap beacon__foot">{demo.roadmapNote}</p>
+</section>
+
+<style>
+  /* Único momento de campo invertido no site: ouro sobre tinta. */
+  .beacon {
+    margin-top: var(--section-space);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) 0;
+    background: var(--gold);
+    color: var(--ink);
+    border-block: var(--edge) solid var(--gold-deep);
+  }
+
+  .beacon__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .beacon__kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+
+  .beacon__kicker::before {
+    content: "";
+    width: 26px;
+    height: 3px;
+    background: var(--ink);
+  }
+
+  .beacon__title {
+    margin-top: 0.6rem;
+    font-size: var(--fs-num);
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .beacon__desc {
+    margin-top: 1rem;
+    max-width: 54ch;
+    color: var(--ink);
+  }
+
+  .beacon__year {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: clamp(1rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2.25rem);
+    border: 3px solid var(--ink);
+    background: rgba(8, 20, 38, 0.06);
+  }
+
+  .beacon__year-num {
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    font-weight: 700;
+    line-height: 0.9;
+    color: var(--ink);
+  }
+
+  .beacon__year-icon {
+    --icon: var(--icon-md);
+    display: grid;
+    place-items: center;
+  }
+
+  .beacon__foot {
+    padding-block: 0.9rem 1.4rem;
+    border-top: 3px solid var(--ink);
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-on-gold);
+  }
+
+  @media (max-width: 780px) {
+    .beacon__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .beacon__year {
+      grid-auto-flow: column;
+      align-items: center;
+      justify-content: start;
+      gap: 1.25rem;
+    }
+  }
+</style>

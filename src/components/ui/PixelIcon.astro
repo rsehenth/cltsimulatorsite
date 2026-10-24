@@ -1,0 +1,35 @@
+---
+import type { SpriteName } from '../../data/sprites';
+
+interface Props {
+  name: SpriteName | string;
+  /** Rótulo acessível. Sem rótulo, o ícone é decoração pura. */
+  label?: string;
+}
+
+const { name, label } = Astro.props;
+const symbol = `#px-${name as SpriteName}`;
+/* O tamanho vem de --icon no container (.plate--sm/md/lg ou no CSS do bloco),
+   nunca de um style inline: assim a CSP dispensa style-src 'unsafe-inline'. */
+---
+
+{
+  label ? (
+    <span class="icon-wrap" role="img" aria-label={label}>
+      <svg class="pixel" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <use href={symbol}></use>
+      </svg>
+    </span>
+  ) : (
+    <svg class="pixel" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <use href={symbol}></use>
+    </svg>
+  )
+}
+
+<style>
+  .icon-wrap {
+    display: grid;
+    place-items: center;
+  }
+</style>

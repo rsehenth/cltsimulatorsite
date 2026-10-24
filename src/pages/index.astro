@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Highlights from '../components/home/Highlights.astro';
+import StatusPanel from '../components/home/StatusPanel.astro';
+import ApplicationSheet from '../components/home/ApplicationSheet.astro';
+import Devlog from '../components/home/Devlog.astro';
+import FeatureCard from '../components/game/FeatureCard.astro';
+import Gallery from '../components/game/Gallery.astro';
+import AiNote from '../components/game/AiNote.astro';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import RoadmapTimeline from '../components/roadmap/RoadmapTimeline.astro';
+import SystemGrid from '../components/roadmap/SystemGrid.astro';
+import PlannedList from '../components/roadmap/PlannedList.astro';
+import ArtEvolution from '../components/roadmap/ArtEvolution.astro';
+import DemoBeacon from '../components/roadmap/DemoBeacon.astro';
+
+import { game, highlights, mechanics } from '../data/game';
+import { builtFronts, systemAreas, plannedFronts, nextMilestone, artUpgrade, artPhases } from '../data/roadmap';
+import type { SpriteName } from '../data/sprites';
+
+/** Todos os sprites usados nesta página — a folha é gerada só com eles. */
+const sprites: SpriteName[] = [
+  ...highlights,
+  ...mechanics,
+  ...builtFronts,
+  ...systemAreas,
+  ...plannedFronts,
+  nextMilestone,
+  ...artUpgrade.areas,
+  ...artPhases,
+]
+  .map((entry) => entry.icon as SpriteName)
+  .concat(['diary', 'brush', 'sparkle', 'tile', 'letter', 'checklist', 'office']);
+
+const unique = [...new Set(sprites)];
+
+const { character, hero } = game;
+---
+
+<BaseLayout sprites={unique}>
+  <!-- ============ 01 · HOME ============ -->
+  <div id="home" class="anchor-pad"></div>
+  <Hero />
+  <Highlights />
+  <StatusPanel />
+  <ApplicationSheet />
+  <Devlog />
+
+  <hr class="perforation wrap" aria-hidden="true" />
+
+  <!-- ============ 02 · JOGO E CONCEITO ============ -->
+  <section class="section" id="jogo" aria-labelledby="jogo-title">
+    <div class="wrap">
+      <SectionHeading
+        num="Seção 02"
+        id="jogo-title"
+        lines={['Cleiton pede uma chance.']}
+        note={`O mercado pede experiência. ${game.category}`}
+      />
+
+      <div class="story">
+        <div class="story__main" data-reveal>
+          <p class="story__lead">{character.premise}</p>
+          <div class="story__cols">
+            <p>{character.summary}</p>
+            <p>{character.situation}</p>
+          </div>
+          <p class="story__deadline">
+            <span class="story__deadline-num" aria-hidden="true">5</span>
+            <span>{character.deadline}</span>
+          </p>
+        </div>
+
+        <ul class="story__side ticked ticked--gold" data-reveal>
+          <li>Procura de emprego e exigência de experiência</li>
+          <li>Entrevistas e candidaturas ignoradas</li>
+          <li>Contas, boletos e a casa em risco</li>
+          <li>Redes sociais profissionais e situações absurdas</li>
+          <li>A convivência com a mãe e a rotina da casa</li>
+        </ul>
+      </div>
+
+      <div class="mechanics">
+        <h3 class="mechanics__title">Principais mecânicas</h3>
+        <p class="mechanics__note">{hero.complement}</p>
+        <div class="mechanics__grid">
+          {
+            mechanics.map((item) => (
+              <FeatureCard icon={item.icon} title={item.title} text={item.text} />
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="gallery-block">
+        <Gallery />
+      </div>
+
+      <AiNote />
+    </div>
+  </section>
+
+  <hr class="perforation wrap" aria-hidden="true" />
+
+  <!-- ============ 03 · ROADMAP ============ -->
+  <section class="section" id="roadmap" aria-labelledby="roadmap-title">
+    <div class="wrap">
+      <SectionHeading
+        num="Seção 03"
+        id="roadmap-title"
+        lines={['Roadmap do desenvolvimento']}
+        note="O estado real do protótipo, os sistemas por dentro e o que ainda é plano — sem datas inventadas."
+      />
+
+      <div class="block">
+        <h3 class="block__title" data-reveal>O que já construímos</h3>
+        <RoadmapTimeline />
+      </div>
+
+      <div class="block">
+        <h3 class="block__title" data-reveal>Sistemas em evolução</h3>
+        <p class="block__note" data-reveal>Como o protótipo está organizado por dentro.</p>
+        <SystemGrid />
+      </div>
+
+      <div class="block">
+        <h3 class="block__title" data-reveal>O que vem por aí</h3>
+        <p class="block__note" data-reveal>Frentes planejadas, ainda não implementadas.</p>
+        <PlannedList />
+      </div>
+
+      <div class="block">
+        <h3 class="block__title" data-reveal>A evolução visual do CLT Simulator</h3>
+        <ArtEvolution />
+      </div>
+    </div>
+
+    <DemoBeacon />
+  </section>
+</BaseLayout>
+
+<style>
+  .anchor-pad {
+    height: 0;
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  #home {
+    scroll-margin-top: 0;
+  }
+
+  /* ---------- Narrativa ---------- */
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .story__lead {
+    font-family: var(--font-display);
+    font-size: var(--fs-title);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--white);
+    max-width: 44ch;
+  }
+
+  .story__cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.75rem;
+    max-width: 74ch;
+  }
+
+  .story__cols p {
+    color: var(--text-soft);
+  }
+
+  .story__deadline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--panel-in);
+    border-left: 4px solid var(--coral);
+    max-width: 52ch;
+    color: var(--text);
+  }
+
+  .story__deadline-num {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 0.9;
+    color: var(--coral);
+  }
+
+  .story__side {
+    padding: 1.25rem 1.5rem;
+    background: var(--panel-in);
+    border: var(--edge) solid var(--line-soft);
+  }
+
+  .story__side li {
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.55rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .story__side li:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  /* ---------- Mecânicas ---------- */
+  .mechanics {
+    margin-top: var(--section-space);
+  }
+
+  .mechanics__title,
+  .block__title {
+    font-size: var(--fs-lead);
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .mechanics__note,
+  .block__note {
+    margin-top: 0.5rem;
+    margin-bottom: 1.75rem;
+    max-width: 58ch;
+    color: var(--steel);
+  }
+
+  .mechanics__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(1.5rem, 3.5vw, 2.75rem);
+    margin-top: 2rem;
+  }
+
+  .gallery-block {
+    margin-top: var(--section-space);
+  }
+
+  /* ---------- Blocos do roadmap ---------- */
+  .block {
+    margin-top: var(--section-space);
+  }
+
+  .block:first-of-type {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  @media (max-width: 980px) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .story__cols {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+/**
+ * Gera a folha de sprites pixel em SVG uma única vez, em build.
+ * Cada ícone do site é um <use> apontando para um <symbol> daqui,
+ * então a grade 16x16 nunca é desenhada duas vezes no navegador.
+ */
+import { PALETTE, SPRITES } from '../../data/sprites';
+
+const used = new Set<string>(Astro.props.names ?? []);
+const names = Object.keys(SPRITES).filter((name) => used.size === 0 || used.has(name));
+
+/** Pixels horizontais iguais viram um segmento; segmentos por cor viram um path. */
+function toPaths(rows: readonly string[]): string {
+  const byColor = new Map<string, string>();
+  rows.forEach((row, y) => {
+    let x = 0;
+    while (x < 16) {
+      const ch = row[x] ?? '.';
+      if (ch === '.') {
+        x += 1;
+        continue;
+      }
+      let width = 1;
+      while ((row[x + width] ?? '.') === ch) width += 1;
+      byColor.set(ch, `${byColor.get(ch) ?? ''}M${x} ${y}h${width}v1h-${width}z`);
+      x += width;
+    }
+  });
+  let out = '';
+  for (const [ch, d] of byColor) {
+    out += `<path fill="${PALETTE[ch as keyof typeof PALETTE] ?? '#f0f'}" d="${d}"/>`;
+  }
+  return out;
+}
+
+const symbols = names
+  .map((name) => `<symbol id="px-${name}" viewBox="0 0 16 16">${toPaths(SPRITES[name as keyof typeof SPRITES])}</symbol>`)
+  .join('');
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" class="sprite-sheet" aria-hidden="true" focusable="false" set:html={symbols}></svg>
+
+<style is:global>
+  .sprite-sheet {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+interface Props {
+  num?: string;
+  /** Uma linha por frase: mantém qualquer título em no máximo duas linhas. */
+  lines: readonly string[];
+  note?: string;
+  id?: string;
+  level?: 2 | 3;
+}
+
+const { num, lines, note, id, level = 2 } = Astro.props;
+const Tag = `h${level}` as 'h2' | 'h3';
+---
+
+<div class="section__head">
+  {num && <span class="section__num" data-reveal>{num}</span>}
+  <Tag class="section__title" id={id} data-reveal>
+    {lines.map((line) => <span class="section__line">{line}</span>)}
+  </Tag>
+  {note && <p class="section__note" data-reveal>{note}</p>}
+</div>
+
+<style>
+  .section__line {
+    display: block;
+  }
+</style>

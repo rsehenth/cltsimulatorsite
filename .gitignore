@@ -1,0 +1,22 @@
+# dependências
+node_modules/
+
+# saída de build e cache do Astro
+dist/
+.astro/
+
+# arquivos de trabalho do gate de design (screenshots e relatórios de inspeção)
+.taste-skill/
+
+# variáveis de ambiente locais
+.env
+.env.*
+!.env.example
+
+# sistema operacional e editores
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/

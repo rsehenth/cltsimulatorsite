@@ -1,0 +1,269 @@
+---
+import { artUpgrade, artPhases, counts } from '../../data/roadmap';
+import { STATUS_LABEL } from '../../data/game';
+import PixelIcon from '../ui/PixelIcon.astro';
+---
+
+<div class="art">
+  <div class="art__intro cornered">
+    <span class="art__plate plate plate--md"><PixelIcon name="brush" /></span>
+    <p class="art__desc">{artUpgrade.intro}</p>
+    <p class="art__flag">{artUpgrade.flag}</p>
+    <p class="art__gauge">
+      <span class="art__gauge-num">{counts.art}</span>
+      <span class="art__gauge-cap">áreas de evolução visual</span>
+    </p>
+  </div>
+
+  <ul class="art__areas">
+    {
+      artUpgrade.areas.map((area) => (
+        <li class="art__area" data-reveal>
+          <span class="art__area-icon plate plate--sm"><PixelIcon name={area.icon} /></span>
+          <h5 class="art__area-title">{area.title}</h5>
+          <ul class="ticked ticked--gold art__area-items">
+            {area.items.map((line) => <li>{line}</li>)}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="art__phases">
+    <h4 class="art__phases-title">Do protótipo à identidade definitiva</h4>
+    <p class="art__phases-note">Sequência de trabalho, sem datas definidas.</p>
+    <ol class="art__track">
+      {
+        artPhases.map((phase) => (
+          <li class={`art__phase${phase.current ? ' art__phase--now' : ''}`}>
+            <span class="art__phase-icon plate plate--sm"><PixelIcon name={phase.icon} /></span>
+            <span class="art__phase-name">{phase.name}</span>
+            <span class={`status status--${phase.status}`}>{STATUS_LABEL[phase.status]}</span>
+            <ul class="art__phase-items">
+              {phase.items.map((line) => <li>{line}</li>)}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<style>
+  .art__intro {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(1rem, 2.6vw, 2rem);
+    align-items: center;
+    padding: clamp(1.1rem, 2.6vw, 1.75rem);
+    border: var(--edge) solid var(--line);
+    background: linear-gradient(115deg, rgba(94, 207, 224, 0.13) 0%, rgba(18, 40, 63, 0.94) 44%, var(--panel-in) 100%);
+    box-shadow: var(--offset);
+  }
+
+  .art__plate {
+    padding: 8px;
+  }
+
+  .art__desc {
+    max-width: 78ch;
+    color: var(--text-soft);
+  }
+
+  .art__flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+    padding: 0.4rem 0.85rem;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 640;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 3px 3px 0 rgba(3, 9, 16, 0.5);
+  }
+
+  .art__gauge {
+    display: grid;
+    justify-items: center;
+    gap: 0.2rem;
+    padding: 0.75rem 1.25rem;
+    border: var(--edge) solid var(--line);
+    background: rgba(6, 17, 31, 0.6);
+    text-align: center;
+  }
+
+  .art__gauge-num {
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--cyan);
+  }
+
+  .art__gauge-cap {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .art__areas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(1.5rem, 3.4vw, 2.25rem);
+  }
+
+  .art__area {
+    padding: 1.15rem 1.25rem;
+    background: var(--panel-in);
+    border-top: 3px solid var(--line);
+  }
+
+  .art__area:nth-child(odd) {
+    border-top-color: var(--cyan);
+  }
+
+  .art__area-icon {
+    padding: 4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .art__area-title {
+    font-size: var(--fs-body);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .art__area-items {
+    margin-top: 0.7rem;
+  }
+
+  /* ---------- Trilha de fases ---------- */
+
+  .art__phases {
+    margin-top: clamp(2rem, 4.5vw, 3rem);
+    padding: clamp(1.1rem, 2.6vw, 1.75rem);
+    border: var(--edge) solid var(--line);
+    background: var(--panel-in);
+  }
+
+  .art__phases-title {
+    font-size: var(--fs-title);
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .art__phases-note {
+    margin-top: 0.35rem;
+    font-size: var(--fs-note);
+    color: var(--steel);
+  }
+
+  .art__track {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+    margin-top: 1.5rem;
+  }
+
+  .art__phase {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.1rem 1.15rem;
+    border: var(--edge) solid var(--line-soft);
+    background: rgba(6, 17, 31, 0.5);
+  }
+
+  .art__phase--now {
+    border-color: var(--green);
+    background: linear-gradient(180deg, rgba(95, 208, 138, 0.12), rgba(6, 17, 31, 0.5));
+  }
+
+  /* Conector em pixel: três quadrados formando a ponta de uma seta. */
+  .art__phase:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: calc(-1 * clamp(1.25rem, 3vw, 2rem) / 2 - 6px);
+    width: 4px;
+    height: 4px;
+    background: var(--gold-deep);
+    box-shadow: -4px -4px 0 var(--gold-deep), -4px 4px 0 var(--gold-deep);
+  }
+
+  .art__phase-icon {
+    padding: 4px;
+    justify-self: start;
+  }
+
+  .art__phase-name {
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-weight: 620;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .art__phase-items {
+    display: grid;
+    gap: 0.3rem;
+    margin-top: 0.35rem;
+    font-size: var(--fs-note);
+    color: var(--text-soft);
+  }
+
+  .art__phase-items li {
+    position: relative;
+    padding-left: 0.95rem;
+  }
+
+  .art__phase-items li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 5px;
+    height: 5px;
+    background: var(--gold);
+  }
+
+  .art__phase--now .art__phase-items li::before {
+    background: var(--green);
+  }
+
+  @media (max-width: 980px) {
+    .art__intro {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .art__gauge {
+      grid-column: 1 / -1;
+      grid-auto-flow: column;
+      align-items: center;
+      justify-content: start;
+      gap: 0.9rem;
+    }
+
+    .art__track {
+      grid-template-columns: 1fr;
+    }
+
+    .art__phase:not(:last-child)::after {
+      top: auto;
+      right: auto;
+      left: calc(50% - 2px);
+      bottom: calc(-1 * clamp(1.25rem, 3vw, 2rem) / 2 - 6px);
+      box-shadow: -4px -4px 0 var(--gold-deep), 4px -4px 0 var(--gold-deep);
+    }
+  }
+</style>

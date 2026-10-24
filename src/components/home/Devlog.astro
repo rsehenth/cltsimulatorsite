@@ -1,0 +1,106 @@
+---
+import { devlog } from '../../data/game';
+import { validLinks } from '../../data/social';
+import PixelIcon from '../ui/PixelIcon.astro';
+
+const social = validLinks();
+---
+
+<section class="devlog" aria-labelledby="devlog-title">
+  <div class="wrap devlog__panel">
+    <span class="devlog__plate plate plate--md"><PixelIcon name="diary" /></span>
+    <div class="devlog__body" data-reveal>
+      <h2 class="devlog__title" id="devlog-title">{devlog.title}</h2>
+      <p class="devlog__text">{devlog.text}</p>
+
+      {
+        social.length > 0 ? (
+          <ul class="devlog__links">
+            {social.map((link) => (
+              <li>
+                <a href={link.url} rel="noopener noreferrer" target="_blank">
+                  {link.label}
+                  <span class="visually-hidden"> (abre em nova aba)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="devlog__empty">{devlog.empty}</p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .devlog {
+    padding-block: var(--block-space);
+  }
+
+  .devlog__panel {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+    align-items: start;
+    max-width: var(--sheet-max);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--panel-in);
+    border-left: 4px solid var(--gold);
+  }
+
+  .devlog__plate {
+    padding: 8px;
+  }
+
+  .devlog__title {
+    font-size: var(--fs-title);
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .devlog__text {
+    margin-top: 0.7rem;
+    max-width: 62ch;
+    color: var(--text-soft);
+  }
+
+  .devlog__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+
+  .devlog__links a {
+    padding: 0.5rem 0.9rem;
+    border: var(--edge) solid var(--line);
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--cyan);
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .devlog__links a:hover {
+    border-color: var(--cyan);
+    color: var(--white);
+  }
+
+  .devlog__empty {
+    margin-top: 1.1rem;
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  @media (max-width: 560px) {
+    .devlog__panel {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

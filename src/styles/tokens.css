@@ -1,0 +1,127 @@
+/* ============================================================
+   CLT SIMULATOR — TOKENS
+   Identidade extraída de Roadmap-v1-CLT.html e da arte do logo
+   oficial. Nenhum outro arquivo declara cores ou tamanhos: tudo
+   referencia estes papéis.
+   ============================================================ */
+
+:root {
+  /* Escurro declarado também como propriedade: sem isso a barra de rolagem,
+     os controles nativos e o fundo do "find in page" chegam em claro. */
+  color-scheme: dark;
+
+  /* --- Campos (fundos) --- */
+  --ink: #081426;          /* azul-marinho dominante: a capa da carteira */
+  --ink-deep: #050e1b;     /* rebaixo atrás das chapas */
+  --panel: #12283f;        /* painel azulado */
+  --panel-in: #0c1d31;     /* painel interno */
+  --plate: #0a1a2c;        /* prancha de ícone pixel */
+  --paper: #eae4d3;        /* papel da ficha — a cor do papel do próprio logo */
+  --paper-deep: #ded6c0;   /* papel em sombra de dobra */
+
+  /* --- Linhas e metais --- */
+  --line: #24425f;
+  --line-soft: #1a3450;
+  --steel: #8aa6c0;
+
+  /* --- Tintas --- */
+  --gold: #f2b53c;
+  --gold-deep: #a97a1c;
+  --cyan: #5ecfe0;
+  --green: #5fd08a;
+  --coral: #ef6a5a;
+  --stamp: #d8352a;        /* vermelho do carimbo "SEM VAGAS" */
+  --stamp-deep: #b32a1f;   /* o mesmo carimbo, escuro o bastante para texto branco (6.1:1) */
+  --text: #e7eff7;
+  --white: #f6f9fc;
+  --ink-on-paper: #14202f; /* texto corrido sobre papel */
+  --muted-on-paper: #465a70;
+
+  /* --- Tintas derivadas: cada cor fora da escala principal tem um nome,
+         e só existe aqui. Um componente que precisa de uma tinta nova
+         acrescenta um papel, não um hexadecimal. --- */
+  --text-soft: #cddced;         /* apoio sobre azul: listas, notas de card */
+  --steel-dim: #7f9ab3;         /* crédito e legenda discreta sobre azul */
+  --gold-lift: #ffc85a;         /* botão de chapa em hover */
+  --gold-ink: #5c410c;          /* rótulo queimado sobre dourado */
+  --ink-on-gold: #24344a;       /* azul escuro sobre campo dourado */
+  --link-on-paper: #1c4f77;     /* link sobre papel */
+  --white-warm: #fff6f4;        /* texto claro sobre tinta de carimbo */
+  --window-blue: #2f7fc1;       /* barra de janela do WinTário (mesma tinta do sprite) */
+  --window-blue-deep: #1d5b8d;
+  --window-ink: #eaf4fb;
+
+  /* --- Papéis de tipografia --- */
+  --font-display: "Bahnschrift", "DIN Alternate", "Franklin Gothic Medium",
+    "Segoe UI", system-ui, sans-serif;
+  --font-text: "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue",
+    "Nimbus Sans", system-ui, sans-serif;
+  --font-data: "Cascadia Mono", "Consolas", ui-monospace, "Liberation Mono",
+    monospace;
+
+  /* Escala tipográfica: cada tamanho do site é um papel nomeado.
+     Nenhum componente inventa um clamp próprio. */
+  --fs-hero: clamp(2.5rem, 5.4vw, 4.5rem);      /* o h1 da capa */
+  --fs-num: clamp(2.25rem, 6vw, 4rem);          /* números de destaque (2027) */
+  --fs-display: clamp(1.375rem, 4vw, 3.125rem);  /* títulos de seção */
+  --fs-lead: clamp(1.375rem, 2.8vw, 2rem);      /* subtítulo de bloco, frase-destaque */
+  --fs-title: clamp(1.125rem, 1.9vw, 1.5rem);   /* cabeçalho de card e de painel */
+  --fs-body: clamp(1rem, 1.05vw, 1.125rem);     /* leitura corrida */
+  --fs-note: 0.9375rem;                         /* nota secundária, 15px */
+  --fs-data: 0.8125rem;                         /* rótulo de HUD, 13px — o piso, nunca menor */
+  --fs-stamp: clamp(1.25rem, 2.4vw, 1.75rem);   /* carimbo: 20px no piso, sempre texto de exibição */
+
+  --lh-hero: 0.92;
+  --lh-display: 1.04;
+  --lh-body: 1.58;
+
+  /* --- Grade e respiros --- */
+  --page-max: 1240px;
+  --sheet-max: 760px;
+  --gutter: clamp(1rem, 3.4vw, 2.5rem);
+  --gap: clamp(0.875rem, 1.4vw, 1.25rem);
+  --section-space: clamp(5.5rem, 12vw, 11rem);
+  --block-space: clamp(1.75rem, 3.4vw, 3rem);
+
+  /* Compensa o cabeçalho fixo para nenhum título ficar escondido. */
+  --scroll-offset: 6rem;
+
+  /* --- Chapas e cantoneiras (vernáculo HUD do projeto) --- */
+  --edge: 2px;
+  --corner: 14px;
+  --offset: 6px 6px 0 rgba(3, 9, 16, 0.55);
+  --offset-sm: 4px 4px 0 rgba(3, 9, 16, 0.5);
+
+  /* --- Pixels: ícones sempre em múltiplo exato de 16 --- */
+  --px: 16px;
+  --icon: 64px;
+  --icon-lg: 96px;
+  --icon-md: 48px;
+  --icon-sm: 32px;
+
+  /* --- Movimento --- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur: 240ms;
+  --dur-slow: 420ms;
+
+  /* --- Foco --- */
+  --focus: 3px solid var(--cyan);
+}
+
+/* Telas largas: ocupa a mesa em vez de deixar margem morta. */
+@media (min-width: 1600px) {
+  :root {
+    --page-max: 1400px;
+    --icon: 80px;
+    --icon-lg: 112px;
+    --fs-body: 1.1875rem;
+    --fs-hero: clamp(2.5rem, 5.4vw, 5.5rem);
+  }
+}
+
+/* No celular o cabeçalho ocupa duas linhas. */
+@media (max-width: 860px) {
+  :root {
+    --scroll-offset: 8.5rem;
+  }
+}

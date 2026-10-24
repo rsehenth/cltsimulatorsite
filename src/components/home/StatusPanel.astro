@@ -1,0 +1,202 @@
+---
+import { game } from '../../data/game';
+import { counts } from '../../data/roadmap';
+import PixelIcon from '../ui/PixelIcon.astro';
+
+const { status, demo } = game;
+
+const readouts = [
+  { icon: 'tile', label: 'Estado do projeto', value: status.label, tone: 'green' },
+  { icon: 'checklist', label: 'Fase de trabalho', value: status.detail, tone: 'cyan' },
+  { icon: 'sparkle', label: 'Próxima entrega pública', value: `Demo ${demo.year}`, tone: 'gold' },
+];
+---
+
+<section class="hud" aria-label="Status oficial do desenvolvimento">
+  <div class="wrap">
+    <div class="hud__panel cornered">
+      <div class="hud__bar">
+        <span class="hud__bar-title">status_report.exe</span>
+        <span class="hud__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+
+      <ul class="hud__rows">
+        {
+          readouts.map((row, i) => (
+            <li class={`hud__row hud__row--${row.tone}`} data-reveal>
+              <span class="hud__lamp" aria-hidden="true"></span>
+              <span class="hud__plate plate plate--sm"><PixelIcon name={row.icon} /></span>
+              <span class="hud__label">{row.label}</span>
+              <strong class="hud__value">{row.value}</strong>
+              <span class="hud__steps" aria-hidden="true">
+                {Array.from({ length: 9 }, (_, s) => <i class={s <= i * 3 + 2 ? 'on' : undefined}></i>)}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="hud__foot">
+        <span>{counts.built} frentes construídas</span>
+        <span aria-hidden="true">·</span>
+        <span>{counts.systems} áreas de sistema</span>
+        <span aria-hidden="true">·</span>
+        <span>{counts.planned} frentes planejadas</span>
+      </p>
+      <p class="hud__note">{demo.note}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hud {
+    padding-block: var(--block-space);
+  }
+
+  .hud__panel {
+    background: var(--panel-in);
+    border: var(--edge) solid var(--line);
+    box-shadow: var(--offset);
+  }
+
+  /* Barra de janela no estilo WinTário: o painel é software de jogo, não KPI. */
+  .hud__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(180deg, var(--window-blue), var(--window-blue-deep));
+    border-bottom: var(--edge) solid var(--line);
+  }
+
+  .hud__bar-title {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--window-ink);
+  }
+
+  .hud__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .hud__dots i {
+    width: 10px;
+    height: 10px;
+    background: rgba(6, 17, 31, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(234, 244, 251, 0.5);
+  }
+
+  .hud__rows {
+    display: grid;
+    gap: 0;
+  }
+
+  .hud__rows li {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: clamp(0.6rem, 1.8vw, 1.25rem);
+    padding: clamp(0.9rem, 2vw, 1.25rem) clamp(1rem, 2.6vw, 1.75rem);
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .hud__row--green {
+    --tone: var(--green);
+  }
+
+  .hud__row--cyan {
+    --tone: var(--cyan);
+  }
+
+  .hud__row--gold {
+    --tone: var(--gold);
+  }
+
+  .hud__rows li:last-child {
+    border-bottom: 0;
+  }
+
+  .hud__lamp {
+    width: 11px;
+    height: 11px;
+    background: var(--tone);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tone) 22%, transparent);
+  }
+
+  .hud__plate {
+    padding: 4px;
+  }
+
+  .hud__label {
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .hud__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-title);
+    font-weight: 640;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--tone);
+    text-align: right;
+  }
+
+  .hud__steps {
+    display: flex;
+    gap: 4px;
+  }
+
+  .hud__steps i {
+    width: 8px;
+    height: 8px;
+    background: var(--line);
+  }
+
+  .hud__steps i.on {
+    background: var(--tone);
+  }
+
+  .hud__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.85rem;
+    padding: 0.9rem clamp(1rem, 2.6vw, 1.75rem);
+    background: rgba(6, 17, 31, 0.6);
+    border-top: var(--edge) solid var(--line-soft);
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .hud__note {
+    padding: 0.7rem clamp(1rem, 2.6vw, 1.75rem) 1rem;
+    font-size: var(--fs-note);
+    color: var(--steel);
+  }
+
+  @media (max-width: 780px) {
+    .hud__rows li {
+      grid-template-columns: auto auto 1fr;
+      row-gap: 0.5rem;
+    }
+
+    .hud__value {
+      grid-column: 2 / -1;
+      text-align: left;
+    }
+
+    .hud__steps {
+      display: none;
+    }
+  }
+</style>
