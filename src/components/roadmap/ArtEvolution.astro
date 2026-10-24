@@ -52,13 +52,27 @@ import PixelIcon from '../ui/PixelIcon.astro';
 <style>
   .art__intro {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: clamp(1rem, 2.6vw, 2rem);
     align-items: center;
     padding: clamp(1.1rem, 2.6vw, 1.75rem);
     border: var(--edge) solid var(--line);
     background: linear-gradient(115deg, rgba(94, 207, 224, 0.13) 0%, rgba(18, 40, 63, 0.94) 44%, var(--panel-in) 100%);
     box-shadow: var(--offset);
+  }
+
+  /* Selo e medidor vivem na coluna do texto. Soltos numa grade de três trilhos
+     `auto`, o max-content deles — o texto inteiro em uma linha — definia a
+     largura das colunas laterais: a chapa esticava para 258 px e o parágrafo
+     caía para 154 px em 1024 px e 0 px em celular. */
+  .art__flag {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .art__gauge {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .art__plate {
@@ -244,6 +258,15 @@ import PixelIcon from '../ui/PixelIcon.astro';
   @media (max-width: 980px) {
     .art__intro {
       grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    /* A bandeira é inline-flex: seu max-content é o texto inteiro em uma
+       linha (~300 px). Deixada na coluna `auto`, ela alargava aquela coluna e
+       esmagava o parágrafo a 0 px em celular — uma palavra por linha, cortada
+       na borda. Ocupa a linha inteira e encolhe até o próprio texto. */
+    .art__flag {
+      grid-column: 1 / -1;
+      justify-self: start;
     }
 
     .art__gauge {

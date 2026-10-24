@@ -1,7 +1,7 @@
 ---
 import { game } from '../../data/game';
 import { navigation } from '../../data/navigation';
-import { validLinks } from '../../data/social';
+import { validLinks, followLine } from '../../data/social';
 
 const social = validLinks();
 const year = new Date().getFullYear();
@@ -28,13 +28,29 @@ const year = new Date().getFullYear();
       <p class="backcover__head">Onde acompanhar</p>
       {
         social.length > 0 ? (
-          <ul>
-            {social.map((link) => (
-              <li>
-                <a href={link.url} rel="noopener noreferrer" target="_blank">{link.label}</a>
-              </li>
-            ))}
-          </ul>
+          <>
+            <p class="backcover__follow">
+              {followLine.before}
+              <a href={social[0].url} rel="noopener noreferrer" target="_blank">
+                {social[0].handle || social[0].label}
+              </a>
+              {followLine.after}
+              {/* O aviso vem depois da frase: dentro do link ele quebrava a
+                  leitura no meio da vírgula. */}
+              <span class="visually-hidden"> Abre em nova aba.</span>
+            </p>
+            {social.length > 1 && (
+              <ul>
+                {social.slice(1).map((link) => (
+                  <li>
+                    <a href={link.url} rel="noopener noreferrer" target="_blank">
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         ) : (
           <p class="backcover__pending">
             Nenhum canal oficial está publicado ainda. As URLs entram aqui a partir de
@@ -55,7 +71,8 @@ const year = new Date().getFullYear();
 
 <style>
   .backcover {
-    margin-top: var(--section-space);
+    /* Sem margem: quem fecha o documento é a faixa de demo, e o respiro entre
+       ela e a contracapa é o respiro de fim de página, não uma tela vazia. */
     border-top: var(--edge) solid var(--line);
     background: linear-gradient(180deg, rgba(18, 40, 63, 0.55), rgba(5, 14, 27, 0.9));
   }
@@ -115,6 +132,16 @@ const year = new Date().getFullYear();
   .backcover__social ul {
     display: grid;
     gap: 0.55rem;
+  }
+
+  /* A frase do canal é conteúdo, não nota de rodapé: tinta de corpo. */
+  .backcover__follow {
+    max-width: 34ch;
+    color: var(--text);
+  }
+
+  .backcover__follow + ul {
+    margin-top: 0.9rem;
   }
 
   .backcover__nav a,

@@ -9,7 +9,8 @@ sem servidor e sem build image customizada.
 ## 1. Antes de publicar — checklist de conteúdo
 
 - [ ] `npm run check` sem erro e `npm run build` sem aviso.
-- [ ] `npm run preview` conferido em 1920, 1440, 1366, 1024, 768, 390, 375 e 320 px.
+- [ ] `npm run preview` conferido nas oito larguras do brief (1920, 1440, 1366, 1024, 768, 390, 375,
+      320) e na varredura 280 → 3440 px (`AGENTS.md`, passos 5 e 7).
 - [ ] Nenhuma string de "domínio oficial" no HTML gerado (sem `SITE_URL`, o build não deve ter
       `canonical`, `og:url` nem sitemap).
 - [ ] `src/data/social.ts` ou vazio (sem canal publicado) ou com URLs absolutas reais.

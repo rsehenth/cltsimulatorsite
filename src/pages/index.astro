@@ -150,6 +150,18 @@ const { character, hero } = game;
     scroll-margin-top: 0;
   }
 
+  /* Quem faz a costura entre duas seções é o furo, e é ele que carrega o
+     respiro. Cada `.section` traz um `--section-space` dos dois lados:
+     empilhados com as margens da perfuração, eles abriam ~470px de chão
+     vazio antes do título da seção 03 — duas telas quase vazias onde a
+     página só precisava de uma linha de pontos.
+     Embaixo do roadmap não sobra nada: a faixa de demo fecha a página e já
+     traz a própria margem de cima. */
+  #jogo,
+  #roadmap {
+    padding-block: 0;
+  }
+
   /* ---------- Narrativa ---------- */
   .story {
     display: grid;
@@ -239,7 +251,10 @@ const { character, hero } = game;
 
   .mechanics__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    /* O piso de 320 px não pode exceder o próprio container: em telas de 320
+       px o trilho único ficava com 320 px dentro de ~288 px e o texto saía da
+       tela. min() mantém o piso em telas maiores e cede em telas menores. */
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: clamp(1.5rem, 3.5vw, 2.75rem);
     margin-top: 2rem;
   }

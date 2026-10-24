@@ -111,9 +111,10 @@ Para publicar uma captura real:
 ## Como inserir devlogs
 
 O bloco `Acompanhe o desenvolvimento` hoje é um espaço reservado honesto: ele descreve o que vai
-publicar e, enquanto não houver canal oficial, mostra
-`devlog.empty` ("As atualizações do desenvolvimento entram no ar aqui assim que forem publicadas.").
-**Não existe lista de devlogs implementada** — não escreva posts em HTML solto para "aparecer".
+publicar e, enquanto não houver devlogs, mostra `devlog.empty` ("As atualizações do desenvolvimento
+entram no ar aqui assim que forem publicadas."). Com o canal do YouTube publicado, o bloco passou a
+mostrar o link do canal no lugar dessa frase — é o mesmo `validLinks()` do rodapé, não um link escrito à
+mão. **Não existe lista de devlogs implementada** — não escreva posts em HTML solto para "aparecer".
 
 Quando houver devlogs reais, o caminho é:
 
@@ -130,16 +131,20 @@ Quando houver devlogs reais, o caminho é:
 
 ## Como configurar redes sociais
 
-`src/data/social.ts` começa com as cinco URLs vazias de propósito.
+`src/data/social.ts` é a única fonte das redes. Hoje só o YouTube tem URL publicada
+(`Mundo de Seh`, `https://www.youtube.com/@mundodeseh`); as outras quatro entradas seguem vazias de
+propósito.
 
 1. Preencha `url` com o endereço **absoluto e publicado** (`https://…`).
 2. `validLinks()` filtra: entrada sem URL, com placeholder ou relativa não renderiza. Não aparece
    botão cinza nem link quebrado.
-3. Ao preencher, o rodapé passa a listar os canais e o bloco de devlog mostra os links — os dois leem
-   a mesma função.
-4. Link externo é sempre `target="_blank"` + `rel="noopener noreferrer"`, com o aviso textual
-   "(abre em nova aba)" para leitor de tela.
-5. Sem canal oficial: não criar perfil "para o site funcionar".
+3. Ao preencher, o rodapé escreve a frase de acompanhamento montada a partir de `followLine` (antes +
+   nome do canal linkado + depois) e o bloco de devlog passa a listar os canais — os dois leem a mesma
+   função. Um segundo canal preenchido entra na lista abaixo da frase, sem editar componente.
+4. `handle` é o nome legível do canal; sem ele, o rótulo genérico (`YouTube`, `X`) é o que aparece.
+5. Link externo é sempre `target="_blank"` + `rel="noopener noreferrer"`, com o aviso textual
+   "(abre em nova aba)" para leitor de tela — no rodapé, depois da frase, para não quebrar a leitura.
+6. Sem canal oficial: não criar perfil "para o site funcionar".
 
 ## Como alterar a previsão da demo
 

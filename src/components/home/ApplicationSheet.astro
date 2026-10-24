@@ -53,6 +53,17 @@ const fields = [
     padding-block: var(--block-space) var(--section-space);
   }
 
+  /* A folha pede uma mesa: em tela larga a faixa inteira vira a superfície,
+     o papel não fica boiando no vazio, e o respiro de baixo passa a ser da
+     mesa — não do documento. */
+  @media (min-width: 1400px) {
+    .ficha {
+      padding-block: clamp(2.5rem, 4vw, 4.5rem);
+      background: var(--panel-in);
+      border-block: var(--edge) solid var(--line-soft);
+    }
+  }
+
   .ficha__wrap {
     max-width: var(--sheet-max);
   }
@@ -101,6 +112,19 @@ const fields = [
     text-transform: uppercase;
     max-width: 22ch;
     color: var(--ink-on-paper);
+  }
+
+  /* Celular de 280–360 px: a folha precisa caber inteira com o título em duas
+     linhas. Abre-se a margem do papel antes de encolher a voz do título. */
+  @media (max-width: 360px) {
+    .ficha__sheet {
+      padding-inline: 1rem;
+    }
+
+    .ficha__title {
+      font-size: 1.25rem;
+      max-width: 18ch;
+    }
   }
 
   .ficha__fields {

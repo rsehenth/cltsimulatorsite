@@ -85,11 +85,19 @@ const isDev = import.meta.env.DEV;
 
     <Footer />
 
+    <!-- Cromo de HUD, não conteúdo: por isso existe só quando o script liga
+         (html.js) e é aria-hidden. Sem JavaScript a barra não aparece. -->
+    <div class="sysbar" aria-hidden="true">
+      <span class="sysbar__fill" data-sysbar-fill></span>
+      <span class="sysbar__label" data-sysbar-label>Home</span>
+    </div>
+
     <!--
       Script externo, não inline: assim a Content-Security-Policy pode
       manter script-src 'self' sem abrir espaço para código embutido.
       O comportamento é melhoria progressiva (veja public/js/reveal.js).
     -->
     <script is:inline defer src="/js/reveal.js"></script>
+    <script is:inline defer src="/js/motion.js"></script>
   </body>
 </html>

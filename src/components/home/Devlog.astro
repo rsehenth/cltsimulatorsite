@@ -19,7 +19,7 @@ const social = validLinks();
             {social.map((link) => (
               <li>
                 <a href={link.url} rel="noopener noreferrer" target="_blank">
-                  {link.label}
+                  {link.handle || link.label}
                   <span class="visually-hidden"> (abre em nova aba)</span>
                 </a>
               </li>
@@ -96,6 +96,16 @@ const social = validLinks();
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--steel);
+  }
+
+  @media (min-width: 1100px) {
+    /* Em tela larga a faixa ocupa a mesa inteira, como o painel do HUD logo
+       acima: vazio à direita de um painel não é respiro, é seção mal
+       construída. */
+    .devlog__panel {
+      max-width: none;
+      align-items: center;
+    }
   }
 
   @media (max-width: 560px) {

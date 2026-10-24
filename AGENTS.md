@@ -37,14 +37,17 @@ Proibido: inventar screenshots de gameplay, contagem regressiva, botão de downl
 Steam/itch.io, múltiplos finais, mecânicas não confirmadas, datas fechadas, domínio falso,
 pontuação de Lighthouse sem medição, redes sociais que não existem.
 
-`src/data/social.ts` começa com todas as URLs vazias de propósito: entrada sem URL válida não renderiza.
+`src/data/social.ts` é a única fonte das redes e só aceita URL absoluta e publicada: entrada sem URL
+válida não renderiza. Hoje existe **um** canal publicado — YouTube, **Mundo de Seh**
+(`https://www.youtube.com/@mundodeseh`); as outras quatro entradas ficam vazias até um canal existir de
+fato. O texto do rodapé vem de `followLine` no mesmo arquivo, não do componente.
 
 ## Estrutura
 
 ```
 public/            assets estáticos copiados 1:1 para dist/
   assets/branding/ logo oficial e marca (originais autorizados)
-  js/              reveal.js e ficha.js — scripts externos (CSP sem 'unsafe-inline')
+  js/              reveal.js, motion.js e ficha.js — scripts externos (CSP sem 'unsafe-inline')
   _headers         CSP e cache para Cloudflare Pages
 src/
   data/            game, roadmap, navigation, social, sprites — todo conteúdo editável
@@ -75,12 +78,14 @@ npm run preview    # serve dist/ para conferência final
    nenhum `style="…"` inline, nenhum `<script>` inline que não seja JSON-LD, todo `target="_blank"`
    com `rel="noopener noreferrer"`.
 4. Verificar âncoras internas: cada `href="#x"` precisa de um `id="x"` correspondente.
-5. Responsividade nas oito larguras do brief: 1920, 1440, 1366, 1024, 768, 390, 375, 320 — sem
-   rolagem horizontal.
+5. Responsividade nas oito larguras do brief (1920, 1440, 1366, 1024, 768, 390, 375, 320) **e** na
+   varredura de ponta a ponta, 280 → 3440 px: sem rolagem horizontal em nenhuma delas, e nenhum título
+   passando de duas linhas.
 6. Erros de console quando for possível inspecionar a interface.
 7. Gate de design (skill `design-taste-frontend`), com o servidor apontando para **dentro de `dist/`**:
    ```bash
    cd dist && node <skill>/scripts/inspect.mjs index.html --widths 1920,1440,1366,1024,768,390,375,320
+   cd dist && node <skill>/scripts/inspect.mjs index.html --widths 280,300,320,360,390,480,640,768,900,1024,1280,1440,1600,1920,2048,2560,2880,3440
    ```
    A baseline esperada é a tabela de `docs/DECISIONS.md`; FAIL fora dela é regressão.
 8. `npm audit` contra o lockfile commitado — zero crítico/alto alcançável. `npm audit fix --force`

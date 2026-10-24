@@ -33,7 +33,8 @@ chegar; a propriedade cobre barra de rolagem, controles nativos e o realce do "l
 | Token | Valor | Uso | Nota de contraste |
 | --- | --- | --- | --- |
 | `--gold` | `#f2b53c` | Acento principal, rótulo ativo, títulos de destaque | texto grande sobre `--ink` |
-| `--gold-deep` | `#a97a1c` | Numeração decorativa (`01`, `02`, `03`) | discreto por intenção |
+| `--gold-deep` | `#a97a1c` | Numeração decorativa (`01`, `02`, `03`), bordas e marcadores de chapa | discreto por intenção; 4,4:1 — **não** serve para rótulo de 13 px |
+| `--gold-planned` | `#bd8b22` | Tinta do estado `planned` (selo "Planejado") | ≥4,9:1 sobre `--ink`, `--panel`, `--panel-in` e `--plate` |
 | `--cyan` | `#5ecfe0` | Foco, sistema ativo, número 2027 | — |
 | `--green` | `#5fd08a` | Estado implementado, luz "ao vivo" | — |
 | `--coral` | `#ef6a5a` | Alerta leve, nota de plano | — |
@@ -86,7 +87,7 @@ Escala (oito papéis nomeados — nenhum componente cria `clamp` próprio):
 
 | Token | Faixa | Para quê |
 | --- | --- | --- |
-| `--fs-hero` | `clamp(2.5rem, 5.4vw, 5.5rem)` (5.5rem a partir de 1600 px) | O `h1` da capa |
+| `--fs-hero` | `clamp(2.5rem, 5.4vw, 4.5rem)` · 5.5rem a partir de 1600 px · 5,2vw entre 2000 e 2399 px · teto de 7.5rem acima de 2400 px | O `h1` da capa |
 | `--fs-num` | `clamp(2.25rem, 6vw, 4rem)` | O número 2027 |
 | `--fs-display` | `clamp(1.375rem, 4vw, 3.125rem)` | Títulos de seção |
 | `--fs-lead` | `clamp(1.375rem, 2.8vw, 2rem)` | Frase-destaque, título da ficha |
@@ -124,6 +125,15 @@ Regras de composição:
 `.wrap` aplica a coluna + o respiro lateral; `.section` aplica o espaço vertical. Toda seção do site é
 `<section class="section"><div class="wrap">…`.
 
+**Duas exceções, e as duas por vazio medido.** Onde há uma `.perforation` entre seções, quem carrega o
+respiro é o picote — `margin-block: calc(var(--section-space) / 2)` de cada lado — e as seções vizinhas
+abrem mão do padding dessa borda (`#jogo, #roadmap { padding-block: 0 }`). Com os dois `--section-space`
+empilhados mais a margem própria do furo, a costura antes da seção 03 abria 469 px de chão em 1440 px, e
+o inspetor marcou duas telas quase vazias. A outra exceção é o fecho: `#roadmap` termina com a faixa de
+demo (`DemoBeacon`), que já traz a margem de cima, então o rodapé não tem `margin-top` — as duas regras
+que existiam para separar conteúdo de conteúdo produziam, depois da faixa, 352 px de tela vazia antes da
+contracapa.
+
 ## 4. Chapas, cantoneiras e perfurações (o vernáculo)
 
 | Classe | O que faz |
@@ -131,7 +141,7 @@ Regras de composição:
 | `.plate` / `.plate--sm` / `--md` / `--lg` | Prancha de ícone com bisel interno; define `--icon` (32/48/96 px) |
 | `.cornered` | Cantoneiras de HUD nos quatro cantos de um painel (via `::before`/`::after`) |
 | `.sheet` | Bloco com aparência de formulário dentro do painel |
-| `.perforation` | Linha pontilhada que separa as três seções — o picote do papel |
+| `.perforation` | Linha pontilhada que separa as três seções — o picote do papel, e o dono do respiro naquela costura |
 | `--edge: 2px` | Espessura de toda borda de chapa |
 | `--corner: 14px` | Comprimento da cantoneira |
 | `--offset` / `--offset-sm` | Sombra dura (`6px 6px 0` / `4px 4px 0`) — a chapa deslocada, nunca blur |
@@ -149,7 +159,7 @@ Os cinco estados reais do projeto, com rótulo e cor únicos (`src/data/game.ts`
 | `active` | Sistema ativo | `--cyan` | `.status--active` |
 | `base` | Base de jogo | `--steel` | `.status--base` |
 | `proto` | No protótipo | `--gold` | `.status--proto` |
-| `planned` | Planejado / não implementado | `--coral` | `.status--planned` |
+| `planned` | Planejado / não implementado | `--gold-planned` | `.status--planned` |
 
 Padrão em todos os cards: o estado aparece **como texto** (rótulo), não só como cor — quem não
 distingue as tintas lê a mesma informação. Variações de cor por estado usam classe
@@ -185,33 +195,72 @@ Regras: `shape-rendering: crispEdges` sempre; dimensão sempre múltipla de 16; 
 
 ## 8. Movimento
 
-Quatro camadas, todas só em `transform`/`opacity`, todas com fallback em `prefers-reduced-motion`:
+Cinco camadas, todas só em `transform`/`opacity`/`clip-path`/`background-color`, todas gateadas por
+`@media (prefers-reduced-motion: no-preference)` — e as que escondem algo, também por `html.js`:
 
 1. **Movimento de assinatura:** o carimbo "SEM VAGAS" desce sobre a ficha (`@keyframes ficha-hit`,
    escala 2.4 → 0.96 → 1 com leve rotação de -9°).
-2. **Entrada escalonada:** elementos com `data-reveal` ganham `.reveal` + `.is-d1…d4` por
-   `IntersectionObserver` e entram com `translateY(18px)` + opacidade, 60–90 ms defasados dentro do
-   mesmo grupo irmão. As classes só existem depois que o script roda — sem JavaScript, nada fica escondido.
-3. **Feedback de controle:** hover e active em botões, links de navegação, linhas de HUD e cards.
-4. **Elemento vivo:** a luz `--green` do cabeçalho e do hero pisca em `steps(1)` — o "em
+2. **Entrada escalonada:** elementos com `data-reveal` ganham `.reveal` + `.is-d0…d4` por
+   `IntersectionObserver` e entram com `translateY(18px)` + opacidade em `--dur-boot` (1,1 s) com
+   `--ease-glide`, 100 ms defasados dentro do mesmo grupo irmão (`.is-d1` a `.is-d4` = 100/200/300/400 ms).
+   As classes só existem depois que o script roda — sem JavaScript, nada fica escondido.
+3. **Progresso ligado ao scroll** (`public/js/motion.js`): a espinha da timeline se desenha
+   (`--spine-p`, `scaleY` com origem no topo) e acende o marcador de cada passo já ultrapassado
+   (`.is-passed`); a capa do hero abre de cima para baixo (`clip-path`) e os fatos entram em cascata; o
+   painel de status do HUD se abre do centro para fora (`.is-boot`); uma barra de sistema fixa no topo
+   (`--p`, `scaleX`) traz o nome da seção atual. O valor **exibido persegue o alvo** — lerp 0,12 na
+   espinha, 0,14 na barra — então rolar rápido não produz salto: produz uma chegada.
+4. **Feedback de controle:** hover e active em botões, links de navegação, linhas de HUD e cards; nos
+   painéis do roadmap, um tilt de no máximo 2° seguido pelo ponteiro, só em
+   `(hover: hover) and (pointer: fine)`, com retorno de `--dur-settle`.
+5. **Elemento vivo:** a luz `--green` do cabeçalho e do hero pisca em `steps(1)` — o "em
    desenvolvimento" precisa parecer ligado, não animado.
+
+A família de tempos do scroll é própria (`--ease-glide` + `--dur-boot` de 1,1 s, `--dur-settle` de
+450 ms para retorno de hover): o `--dur` de 240 ms do resto do site lê como seco quando o olho está
+acompanhando a linha. O reveal de entrada entrou nessa família — tinha um `--dur-slow` de 420 ms só para
+ele, e 420 ms é exatamente o tempo que a página inteira já não usa. A partir daqui o token não existe
+mais: `--dur` manda nos controles, `--dur-boot` no que o visitante acompanha. Nenhum efeito de progresso
+usa `transition` — quem suaviza é o lerp no `rAF`.
 
 ## 9. Responsividade
 
 | Largura | O que muda |
 | --- | --- |
+| ≥ 2400 px | `--page-max` 1800 px; `--fs-hero` tem **teto de 120 px** para o `h1` não passar de duas linhas — ver `DECISIONS.md` §22 |
+| ≥ 2000 px | `--page-max` 1600 px, `--fs-hero` cresce com a tela (5,2vw) para o hero continuar dominando a primeira dobra |
 | ≥ 1600 px | `--page-max` 1400 px, `--fs-hero` sobe para 5.5rem, `--fs-body` 1.1875rem, ícones maiores |
+| ≥ 1400 px | A faixa da ficha de inscrição vira mesa: fundo `--panel-in` com fileiras, o papel não fica boiando no vazio |
 | 1440 / 1366 px | Layout de duas colunas no hero, grades 3× no roadmap |
+| ≥ 1100 px | Painel do devlog ocupa a linha inteira (respiro é da mesa, não do documento) |
 | ≤ 1080 px | Chip de estado sai do cabeçalho (o estado continua no hero e no painel) |
-| ≤ 980 px | Hero vira coluna única, com a capa do logo primeiro |
+| ≤ 980 px | Hero vira coluna única, com a capa do logo primeiro; na abertura de arte, selo e medidor passam a ocupar a linha inteira |
 | ≤ 900 px | Destaques empilham |
 | ≤ 860 px | Cabeçalho em duas linhas; numeração `01/02/03` sai da navegação; `--scroll-offset` sobe para 8.5rem |
 | ≤ 620 px | Ficha de inscrição em coluna única; o carimbo sai da posição absoluta e entra no fluxo |
 | ≤ 560 px | Fatos da capa em 2 colunas; botões do hero em largura total |
-| ≤ 420 px | Marca do logo reduzida |
+| ≤ 420 px | Nome da marca no cabeçalho desce para 1.125rem |
 | ≤ 380 px | Navegação vira grid de três colunas iguais (em vez de tira rolável cortando "ROADMAP") |
+| ≤ 360 px | Margem interna do papel abre para 1rem e o título da ficha desce para 1.25rem — a folha cabe inteira com o título em duas linhas |
 
-Testado em 1920, 1440, 1366, 1024, 768, 390, 375 e 320 px — sem rolagem horizontal em nenhuma delas.
+Duas grades têm regra própria contra trilho guloso, e é por motivo medido, não por gosto:
+
+- **Abertura de arte** (`ArtEvolution.astro`): com `auto minmax(0,1fr) auto`, o selo e o medidor — ambos
+  `inline-flex`, cujo `max-content` é o texto inteiro em uma linha — definiam a largura das colunas
+  laterais. A chapa de ícone de 48 px esticava para 258 px e o parágrafo encolhia para 154 px em
+  1024 px e para **0 px** em celular: uma palavra por linha, cortada na borda. Agora o selo e o medidor
+  moram na coluna do texto, e a chapa ocupa só o próprio ícone.
+- **Grade de mecânicas** (`index.astro`): `minmax(320px, 1fr)` num container de ~288 px (tela de 320 px)
+  criava 16 px de conteúdo fora da tela. `minmax(min(320px, 100%), 1fr)` mantém o piso em telas maiores
+  e cede nas menores.
+
+Medido por `documentElement.scrollWidth` em navegador real, em 41 larguras entre 280 e 3440 px — as
+oito do brief (1920, 1440, 1366, 1024, 768, 390, 375, 320), os pontos de quebra reais de tablet e
+celular até 280 px, e as faixas ultralargas (2048/2560/2880/3440). De **320 px para cima**, `scrollWidth
+=== clientWidth`: nenhuma rolagem horizontal, nenhuma imagem quebrada, nenhum console error. Abaixo do
+piso do brief, 300 px ainda corta 3 px e 280 px corta 23 px — a placa do marco e seu rótulo `nowrap`,
+registrados como limite conhecido em `DECISIONS.md` §25. A lista completa está na seção "Baseline medido
+deste build" do mesmo arquivo.
 
 ## 10. Exemplo de uso
 

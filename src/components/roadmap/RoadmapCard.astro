@@ -91,4 +91,30 @@ const { item } = Astro.props;
       grid-column: 1;
     }
   }
+
+  /* A chapa acende quando a linha da timeline passa pelo card. O ancestral é
+     :global porque quem carrega .is-passed é a lista, deste componente. */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js :global(.timeline__step) .front__plate {
+      transition: border-color var(--dur-settle) var(--ease-glide);
+    }
+
+    html.js :global(.timeline__step.is-passed) .front__plate {
+      border-color: color-mix(in srgb, var(--gold) 60%, var(--line-soft));
+    }
+  }
+
+  /* Tilt de até 2° nos painéis, só onde existe ponteira fina. O transform só
+     é declarado durante o hover: fora dele o painel não ganha contexto de
+     empilhamento nem rasteriza em coordenada fracionária. Os ângulos chegam
+     por --tilt-x/--tilt-y, escritos por motion.js via CSSOM. */
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+    html.js .front__panel {
+      transition: transform var(--dur-settle) var(--ease-glide);
+    }
+
+    html.js .front__panel:hover {
+      transform: rotateX(calc(var(--tilt-x, 0) * 1deg)) rotateY(calc(var(--tilt-y, 0) * 1deg));
+    }
+  }
 </style>
