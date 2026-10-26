@@ -114,6 +114,14 @@
   --ease-glide: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-boot: 1100ms;
   --dur-settle: 450ms;
+  /* Entrada da carteira do hero: início lento e cauda longa. O expo-out dos
+     efeitos de scroll abre depressa demais quando o olho acompanha a capa. */
+  --ease-veil: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-veil: 1500ms;
+  --dur-fact: 1300ms;
+  --stagger-fact: 160ms;
+  /* Atraso entre linhas de um mesmo título mascarado. */
+  --stagger-line: 70ms;
 
   /* --- Foco --- */
   --focus: 3px solid var(--cyan);
