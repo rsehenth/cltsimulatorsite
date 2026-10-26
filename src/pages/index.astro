@@ -9,6 +9,7 @@ import FeatureCard from '../components/game/FeatureCard.astro';
 import Gallery from '../components/game/Gallery.astro';
 import AiNote from '../components/game/AiNote.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
+import RoadmapSummary from '../components/roadmap/RoadmapSummary.astro';
 import RoadmapTimeline from '../components/roadmap/RoadmapTimeline.astro';
 import SystemGrid from '../components/roadmap/SystemGrid.astro';
 import PlannedList from '../components/roadmap/PlannedList.astro';
@@ -113,7 +114,9 @@ const { character, hero } = game;
         note="O estado real do protótipo, os sistemas por dentro e o que ainda é plano — sem datas inventadas."
       />
 
-      <div class="block">
+      <RoadmapSummary />
+
+      <div class="block block--lead">
         <h3 class="block__title" data-reveal>O que já construímos</h3>
         <RoadmapTimeline />
       </div>
@@ -268,7 +271,7 @@ const { character, hero } = game;
     margin-top: var(--section-space);
   }
 
-  .block:first-of-type {
+  .block--lead {
     margin-top: clamp(2rem, 5vw, 3.5rem);
   }
 

@@ -15,7 +15,13 @@ const Tag = `h${level}` as 'h2' | 'h3';
 <div class="section__head">
   {num && <span class="section__num" data-reveal>{num}</span>}
   <Tag class="section__title" id={id} data-reveal>
-    {lines.map((line) => <span class="section__line">{line}</span>)}
+    {
+      lines.map((line) => (
+        <span class="section__line">
+          <span class="section__line-text">{line}</span>
+        </span>
+      ))
+    }
   </Tag>
   {note && <p class="section__note" data-reveal>{note}</p>}
 </div>
@@ -23,5 +29,54 @@ const Tag = `h${level}` as 'h2' | 'h3';
 <style>
   .section__line {
     display: block;
+    /* O texto sobe por trás da própria caixa de linha. O clip extra de
+       0.08em preserva acentos e cedilhas sem alterar a altura da linha. */
+    overflow: hidden;
+    overflow: clip;
+    overflow-clip-margin: 0.08em;
+  }
+
+  .section__line:nth-child(2) {
+    --line-delay: var(--stagger-line);
+  }
+
+  .section__line:nth-child(3) {
+    --line-delay: calc(var(--stagger-line) * 2);
+  }
+
+  .section__line:nth-child(4) {
+    --line-delay: calc(var(--stagger-line) * 3);
+  }
+
+  .section__line-text {
+    display: block;
+  }
+
+  /* O título troca o reveal padrão — opacidade e deslocamento do bloco
+     inteiro — pela máscara de linha: só o texto interno se move e o layout
+     permanece parado. O observer de reveal.js continua sendo o único dono
+     do momento de entrada. */
+  .section__title.reveal,
+  .section__title.reveal.is-in {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+
+  .section__title.reveal .section__line-text {
+    translate: 0 105%;
+  }
+
+  .section__title.reveal.is-in .section__line-text {
+    translate: 0 0;
+    transition: translate var(--dur-settle) var(--ease-glide) var(--line-delay, 0ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section__title.reveal .section__line-text,
+    .section__title.reveal.is-in .section__line-text {
+      translate: none;
+      transition: none;
+    }
   }
 </style>

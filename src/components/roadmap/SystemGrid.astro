@@ -2,6 +2,14 @@
 import { systemAreas, counts } from '../../data/roadmap';
 import { STATUS_LABEL } from '../../data/game';
 import PixelIcon from '../ui/PixelIcon.astro';
+
+const stateOrder = ['active', 'proto', 'base'] as const;
+
+const stateCounts = stateOrder.map((status) => ({
+  status,
+  label: STATUS_LABEL[status],
+  count: systemAreas.filter((area) => area.status === status).length,
+}));
 ---
 
 <div class="systems">
@@ -9,6 +17,17 @@ import PixelIcon from '../ui/PixelIcon.astro';
     <span class="systems__bar-title">painel_de_sistemas</span>
     <span class="systems__bar-count">{counts.systems} áreas</span>
   </div>
+
+  <ul class="systems__legend" aria-label="Sistemas por estado">
+    {
+      stateCounts.map((state) => (
+        <li class={`systems__legend-item systems__legend-item--${state.status}`}>
+          <span class="systems__legend-label">{state.label}</span>
+          <span class="systems__legend-count">{state.count}</span>
+        </li>
+      ))
+    }
+  </ul>
 
   <ul class="systems__grid">
     {
@@ -56,15 +75,65 @@ import PixelIcon from '../ui/PixelIcon.astro';
     color: var(--gold);
   }
 
+  /* Legenda derivada dos mesmos estados dos cards: ajuda a ler a mistura
+     antes de percorrer o mosaico inteiro. */
+  .systems__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    padding: 0.6rem 1rem;
+    border-bottom: var(--edge) solid var(--line-soft);
+    background: var(--ink-deep);
+    font-family: var(--font-data);
+    font-size: var(--fs-data);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .systems__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--steel);
+  }
+
+  .systems__legend-item::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    flex: none;
+    background: var(--tone);
+  }
+
+  .systems__legend-item--active {
+    --tone: var(--cyan);
+  }
+
+  .systems__legend-item--proto {
+    --tone: var(--gold);
+  }
+
+  .systems__legend-item--base {
+    --tone: var(--steel);
+  }
+
+  .systems__legend-count {
+    color: var(--tone);
+  }
+
+  /* Mosaico de 12 trilhos: cada linha leva um sistema ativo em dobro de
+     largura e dois sistemas de apoio. A ordem dos dados é preservada. */
   .systems__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 1px;
     background: var(--line-soft);
   }
 
   .systems__cell {
+    grid-column: span 12;
     display: grid;
+    min-width: 0;
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
       'icon name'
@@ -74,11 +143,17 @@ import PixelIcon from '../ui/PixelIcon.astro';
     align-items: center;
     padding: clamp(0.9rem, 2vw, 1.25rem);
     background: var(--panel-in);
+    box-shadow: inset 0 3px 0 var(--tone);
     transition: background-color var(--dur) var(--ease);
   }
 
   .systems__cell--active {
     --tone: var(--cyan);
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--cyan) 9%, transparent),
+      transparent 52%
+    );
   }
 
   .systems__cell--proto {
@@ -89,9 +164,39 @@ import PixelIcon from '../ui/PixelIcon.astro';
     --tone: var(--steel);
   }
 
+  @media (min-width: 640px) {
+    .systems__cell {
+      grid-column: span 6;
+    }
+  }
+
+  @media (min-width: 980px) {
+    .systems__cell {
+      grid-column: span 3;
+    }
+
+    .systems__cell--active {
+      grid-column: span 6;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas:
+        'icon name status'
+        'icon items items';
+      align-items: start;
+      padding: clamp(1.1rem, 1.8vw, 1.5rem);
+    }
+
+    .systems__cell--active .systems__name {
+      font-size: var(--fs-title);
+    }
+
+    .systems__cell--active .systems__status {
+      align-self: center;
+    }
+  }
+
   @media (hover: hover) {
     .systems__cell:hover {
-      background: var(--panel);
+      background-color: var(--panel);
     }
   }
 
@@ -144,7 +249,7 @@ import PixelIcon from '../ui/PixelIcon.astro';
   .systems__foot {
     padding: 0.85rem 1rem;
     border-top: var(--edge) solid var(--line-soft);
-    background: rgba(6, 17, 31, 0.55);
+    background: color-mix(in srgb, var(--ink-deep) 70%, transparent);
     font-size: var(--fs-note);
     color: var(--steel);
   }
