@@ -125,6 +125,17 @@ const { status, wordmark } = game;
     background: rgba(18, 40, 63, 0.7);
   }
 
+  /* Seção atual: marcada por texto claro e sublinhado dourado, não só por cor
+     (o sublinhado muda a forma). Aplicada por motion.js. */
+  .nav__link.is-current {
+    color: var(--white);
+    border-bottom-color: var(--gold);
+  }
+
+  .nav__link.is-current .nav__num {
+    color: var(--gold);
+  }
+
   .cover__status {
     display: flex;
     align-items: center;

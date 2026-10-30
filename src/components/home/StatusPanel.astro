@@ -23,7 +23,7 @@ const readouts = [
       <ul class="hud__rows">
         {
           readouts.map((row, i) => (
-            <li class={`hud__row hud__row--${row.tone}`} data-reveal>
+            <li class={`hud__row hud__row--${row.tone}`}>
               <span class="hud__lamp" aria-hidden="true"></span>
               <span class="hud__plate plate plate--sm"><PixelIcon name={row.icon} /></span>
               <span class="hud__label">{row.label}</span>
@@ -211,6 +211,29 @@ const readouts = [
 
     html.js .hud__panel.is-boot {
       clip-path: inset(-12px);
+    }
+
+    /* As leituras acendem uma a uma depois que a janela abre. O gatilho é o
+       próprio painel (.is-boot), não um observer por linha: dentro de um
+       recorte fechado nenhuma linha "entra na tela". */
+    html.js .hud__row {
+      opacity: 0;
+      translate: 0 12px;
+    }
+
+    html.js .hud__panel.is-boot .hud__row {
+      opacity: 1;
+      translate: 0 0;
+      transition: opacity var(--dur-settle) var(--ease-glide) calc(var(--dur-boot) * 0.5 + var(--row, 0) * 120ms),
+        translate var(--dur-settle) var(--ease-glide) calc(var(--dur-boot) * 0.5 + var(--row, 0) * 120ms);
+    }
+
+    html.js .hud__row:nth-child(2) {
+      --row: 1;
+    }
+
+    html.js .hud__row:nth-child(3) {
+      --row: 2;
     }
   }
 </style>

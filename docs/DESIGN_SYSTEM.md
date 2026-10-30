@@ -94,7 +94,7 @@ Escala (oito papéis nomeados — nenhum componente cria `clamp` próprio):
 | `--fs-title` | `clamp(1.125rem, 1.9vw, 1.5rem)` | Cabeçalho de card e de painel |
 | `--fs-body` | `clamp(1rem, 1.05vw, 1.125rem)` (1.1875rem a partir de 1600 px) | Leitura corrida |
 | `--fs-note` | `0.9375rem` | Nota secundária |
-| `--fs-data` | `0.8125rem` | Rótulo de HUD — **o piso, nunca menor** |
+| `--fs-data` | `0.875rem` | Rótulo de HUD — **o piso, nunca menor** (14 px; era 13 px, ver `DECISIONS.md` §28) |
 | `--fs-stamp` | `clamp(1.25rem, 2.4vw, 1.75rem)` | O carimbo "Sem vagas" |
 
 Entrelinha: `--lh-hero` 0.92 · `--lh-display` 1.04 · `--lh-body` 1.58.
@@ -207,8 +207,9 @@ Cinco camadas, todas só em `transform`/`opacity`/`clip-path`/`background-color`
 3. **Progresso ligado ao scroll** (`public/js/motion.js`): a espinha da timeline se desenha
    (`--spine-p`, `scaleY` com origem no topo) e acende o marcador de cada passo já ultrapassado
    (`.is-passed`); a capa do hero abre de cima para baixo (`clip-path`) e os fatos entram em cascata; o
-   painel de status do HUD se abre do centro para fora (`.is-boot`); uma barra de sistema fixa no topo
-   (`--p`, `scaleX`) traz o nome da seção atual. O valor **exibido persegue o alvo** — lerp 0,12 na
+   painel de status do HUD se abre do centro para fora (`.is-boot`) e acende suas três leituras em
+   cascata; uma barra de sistema fixa no topo (`--p`, `scaleX`) mostra o progresso da página, e o link
+   da seção atual na navegação ganha `.is-current` + `aria-current="location"`. O valor **exibido persegue o alvo** — lerp 0,12 na
    espinha, 0,14 na barra — então rolar rápido não produz salto: produz uma chegada.
 4. **Feedback de controle:** hover e active em botões, links de navegação, linhas de HUD e cards; nos
    painéis do roadmap, um tilt de no máximo 2° seguido pelo ponteiro, só em
@@ -238,7 +239,8 @@ usa `transition` — quem suaviza é o lerp no `rAF`.
 | ≤ 900 px | Destaques empilham |
 | ≤ 860 px | Cabeçalho em duas linhas; numeração `01/02/03` sai da navegação; `--scroll-offset` sobe para 8.5rem |
 | ≤ 620 px | Ficha de inscrição em coluna única; o carimbo sai da posição absoluta e entra no fluxo |
-| ≤ 560 px | Fatos da capa em 2 colunas; botões do hero em largura total |
+| ≥ 1081 px | O selo de estado do texto do hero some: o chip verde do cabeçalho já diz o mesmo |
+| ≤ 560 px | A capa do hero vira só a arte (sem legenda de HUD nem fatos) para o `h1` entrar na primeira dobra; botões do hero em largura total |
 | ≤ 420 px | Nome da marca no cabeçalho desce para 1.125rem |
 | ≤ 380 px | Navegação vira grid de três colunas iguais (em vez de tira rolável cortando "ROADMAP") |
 | ≤ 360 px | Margem interna do papel abre para 1rem e o título da ficha desce para 1.25rem — a folha cabe inteira com o título em duas linhas |

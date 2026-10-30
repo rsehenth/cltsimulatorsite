@@ -70,22 +70,18 @@ function initMotion() {
 
   /* ---------- Barra de progresso do sistema ---------- */
   const fill = document.querySelector('[data-sysbar-fill]');
-  const label = document.querySelector('[data-sysbar-label]');
-  /* Os rótulos vêm da navegação que já existe; o número "01" do link fica
-     fora porque é decorativo e não nomeia a seção. */
+  /* A seção atual marca o próprio link da navegação (is-current), em vez de
+     um rótulo solto no canto que repetia o texto do menu. */
   const sections = [...document.querySelectorAll('.nav__link')]
     .map((link) => {
       const target = document.querySelector(link.getAttribute('href') || '');
-      if (!target) return null;
-      const num = link.querySelector('.nav__num');
-      const text = link.textContent.replace(num ? num.textContent : '', '').trim();
-      return { target, text: text.toUpperCase() };
+      return target ? { target, link } : null;
     })
     .filter(Boolean);
 
   let barTarget = 0;
   let barShown = 0;
-  let currentSection = '';
+  let currentLink = null;
 
   const read = () => {
     const vh = window.innerHeight;
@@ -102,15 +98,20 @@ function initMotion() {
     const max = root.scrollHeight - vh;
     barTarget = max > 0 ? clamp01(window.scrollY / max) : 0;
 
-    if (label && sections.length > 0) {
+    if (sections.length > 0) {
       const mid = vh * 0.4;
       let active = sections[0];
       for (const section of sections) {
         if (section.target.getBoundingClientRect().top <= mid) active = section;
       }
-      if (active.text !== currentSection) {
-        currentSection = active.text;
-        label.textContent = currentSection;
+      if (active.link !== currentLink) {
+        if (currentLink) {
+          currentLink.classList.remove('is-current');
+          currentLink.removeAttribute('aria-current');
+        }
+        currentLink = active.link;
+        currentLink.classList.add('is-current');
+        currentLink.setAttribute('aria-current', 'location');
       }
     }
   };
@@ -158,9 +159,13 @@ function initMotion() {
 
   const panel = document.querySelector('.hud__panel');
   if (panel) {
-    const boot = observe([panel], (entry) => {
+    /* Observa o contêiner, não o painel: o painel nasce recortado (clip-path
+       fechado) e o navegador mede a interseção do que está visível — um
+       recorte de altura zero nunca "entra na tela", então o painel nunca
+       abriria. */
+    const boot = observe([panel.parentElement || panel], (entry) => {
       if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-boot');
+      panel.classList.add('is-boot');
       boot.disconnect();
     });
     /* Sem IntersectionObserver o painel abre na hora: estado escondido que
