@@ -314,14 +314,38 @@ const { hero, status, demo } = game;
     }
   }
 
+  /* Do cabeçalho em diante o estado já aparece na barra fixa (chip verde):
+     repeti-lo na capa e no texto era a mesma informação três vezes. Abaixo de
+     1080 px o chip some e o selo do texto assume. */
+  @media (min-width: 1081px) {
+    .hero__badge {
+      display: none;
+    }
+  }
+
   @media (max-width: 560px) {
-    .hero__facts {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
+    /* No celular a capa é só a arte: o título (h1) precisa estar na primeira
+       dobra, e a situação/demo/gênero já estão no selo e no 2027 logo abaixo. */
+    .hero {
+      padding-top: 1.25rem;
     }
 
-    .hero__facts div:last-child {
-      grid-column: 1 / -1;
+    .hero__grid {
+      gap: 1.5rem;
+    }
+
+    .hero__cover {
+      padding: 0.75rem;
+      gap: 0;
+    }
+
+    .hero__cover-head,
+    .hero__facts {
+      display: none;
+    }
+
+    .hero__caption {
+      margin-top: 0.5rem;
     }
 
     .hero__cover img {

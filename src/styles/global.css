@@ -413,17 +413,6 @@ html.js .sysbar {
   will-change: transform;
 }
 
-.sysbar__label {
-  position: absolute;
-  top: calc(var(--edge) + 0.35rem);
-  right: var(--gutter);
-  font-family: var(--font-data);
-  font-size: var(--fs-data);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
 /* ---------- Movimento de entrada ---------- */
 
 .reveal {

@@ -12,24 +12,24 @@ const social = validLinks();
     <div class="devlog__body" data-reveal>
       <h2 class="devlog__title" id="devlog-title">{devlog.title}</h2>
       <p class="devlog__text">{devlog.text}</p>
-
-      {
-        social.length > 0 ? (
-          <ul class="devlog__links">
-            {social.map((link) => (
-              <li>
-                <a href={link.url} rel="noopener noreferrer" target="_blank">
-                  {link.handle || link.label}
-                  <span class="visually-hidden"> (abre em nova aba)</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="devlog__empty">{devlog.empty}</p>
-        )
-      }
+      {social.length === 0 && <p class="devlog__empty">{devlog.empty}</p>}
     </div>
+
+    {
+      social.length > 0 && (
+        <ul class="devlog__links" data-reveal>
+          {social.map((link) => (
+            <li>
+              <a href={link.url} rel="noopener noreferrer" target="_blank">
+                <span class="devlog__link-net">{link.label}</span>
+                <span class="devlog__link-name">{link.handle || link.label}</span>
+                <span class="visually-hidden"> (abre em nova aba)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </div>
 </section>
 
@@ -65,28 +65,53 @@ const social = validLinks();
     color: var(--text-soft);
   }
 
+  /* O canal é a ação da faixa: bloco com rede e nome, não uma etiqueta de
+     13 px colada no fim do parágrafo. */
   .devlog__links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-top: 1.25rem;
+    gap: 0.75rem;
+    grid-column: 1 / -1;
   }
 
   .devlog__links a {
-    padding: 0.5rem 0.9rem;
+    display: grid;
+    gap: 0.2rem;
+    min-width: min(100%, 15rem);
+    padding: 0.9rem 1.25rem;
+    background: var(--panel);
     border: var(--edge) solid var(--line);
+    box-shadow: var(--offset-sm);
+    text-decoration: none;
+    transition: translate var(--dur) var(--ease), border-color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease);
+  }
+
+  .devlog__link-net {
     font-family: var(--font-data);
     font-size: var(--fs-data);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    text-decoration: none;
     color: var(--cyan);
-    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .devlog__link-name {
+    font-family: var(--font-display);
+    font-size: var(--fs-title);
+    font-weight: 640;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--white);
   }
 
   .devlog__links a:hover {
+    translate: -2px -2px;
     border-color: var(--cyan);
-    color: var(--white);
+    background: var(--plate);
+  }
+
+  .devlog__links a:active {
+    translate: 2px 2px;
   }
 
   .devlog__empty {
@@ -100,11 +125,38 @@ const social = validLinks();
 
   @media (min-width: 1100px) {
     /* Em tela larga a faixa ocupa a mesa inteira, como o painel do HUD logo
-       acima: vazio à direita de um painel não é respiro, é seção mal
-       construída. */
+       acima: texto à esquerda, canal à direita. Vazio à direita de um painel
+       não é respiro, é seção mal construída. */
     .devlog__panel {
       max-width: none;
+      grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
       align-items: center;
+    }
+
+    /* O canal ocupa a metade direita inteira: o bloco cresce até a borda do
+       painel em vez de flutuar sozinho num canto. */
+    .devlog__links {
+      grid-column: auto;
+      align-items: stretch;
+    }
+
+    .devlog__links li {
+      flex: 1 1 15rem;
+      display: flex;
+    }
+
+    .devlog__links a {
+      flex: 1;
+      align-content: center;
+      min-height: 6rem;
+      padding-inline: clamp(1.25rem, 3vw, 2.25rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .devlog__links a:hover,
+    .devlog__links a:active {
+      translate: none;
     }
   }
 

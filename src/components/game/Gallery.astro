@@ -93,7 +93,9 @@ const ready = entries.filter((entry) => Boolean(entry.src));
 
   /* Estado de prévia: uma tela desligada, não uma imagem faltando. */
   .gallery__plate {
-    --icon: var(--icon-md);
+    /* Sprite em 96 px (6× da grade 16×16): a 48 px o ícone sumia no meio da
+       tela de 16:9 e a prancha parecia vazia. */
+    --icon: var(--icon-lg);
     display: grid;
     place-items: center;
     aspect-ratio: 16 / 9;

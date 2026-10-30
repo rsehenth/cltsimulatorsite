@@ -362,6 +362,41 @@ Depois, em navegador real: tela 7 a **0,29** e tela 12 a **0,34** em 1440 px, ga
 error nas oito larguras. As contagens de movimento mudaram com a paginação: **77/70/65/54/71/37/35/11**
 (eram 76/65/61/57/71/37/33/11) — todas acima da meta de oito da skill.
 
+### 28. Passada de design (taste, impeccable, UI/UX Pro Max, critique, jury)
+
+Rodada de revisão com o inspetor da skill `design-taste-frontend` sobre `dist/` e leitura das capturas.
+Seis mudanças, todas dentro do vernáculo existente (nenhum token de cor novo, nenhum `style=""`):
+
+- **O painel de status nunca abria.** `.hud__panel` nasce recortado (`clip-path` fechado) e o observer
+  olhava o próprio painel: o navegador mede a interseção do que está visível, então um recorte de altura
+  zero nunca "entra na tela" e as três leituras (cada uma com o próprio `data-reveal`, também dentro do
+  recorte) ficavam em opacidade 0. Agora o observer olha o contêiner (`.wrap`) e as linhas acendem em
+  cascata por CSS a partir de `.is-boot`, sem observer por linha.
+- **Rótulo solto "HOME" no canto do cabeçalho saiu.** Repetia o texto da navegação logo ao lado e, no
+  celular, aparecia duas vezes na mesma linha. A seção atual passa a marcar o próprio link
+  (`.is-current`, sublinhado dourado + texto claro, `aria-current="location"`). A barra de progresso
+  continua. O `.sysbar__label` e `data-sysbar-label` deixaram de existir.
+- **No celular o `h1` fica na primeira dobra** (≤560 px): a capa vira só a arte; a legenda de HUD e os
+  três fatos (Situação/Demo/Gênero) saem porque o selo de estado e o 2027 vêm logo abaixo. Antes o título
+  começava a ~600 px de altura em 390 px. Acima de 1081 px o selo de estado do texto some, porque o chip
+  verde do cabeçalho diz o mesmo — antes o estado aparecia três vezes na mesma tela.
+- **Faixa "Acompanhe o desenvolvimento"** (`Devlog.astro`): em ≥1100 px vira duas metades, texto à
+  esquerda e o canal publicado (rede + nome) à direita, como bloco de ação. Fechou o `lopsided` do gate.
+  Sem canal publicado, volta o aviso de vazio, como antes.
+- **Galeria "Prévia a caminho":** sprite em 96 px (6× da grade) em vez de 48 px; a 48 px o ícone sumia
+  no centro de uma tela 16:9.
+- **`--fs-data` de 13 px para 14 px.** São ~90 rótulos de HUD em caixa alta com tracking; o piso subiu
+  um passo por leitura. Contraste não muda. Tamanhos em uso: 14/15/16/… (a contagem continua em 10–11).
+
+Gate depois da passada, nas oito larguras do brief e na varredura 280–3440 px: os mesmos dez ids da
+baseline (decisão 8 e tabela acima) mais, só em larguras ≥1920 px, `ragged-edges` (WARN) e, no meio
+da varredura, `no-title`. Este último é artefato do inspetor: nas larguras fora do mapa de alturas ele
+usa viewport de `largura × 0,625` (320 px de largura = 200 px de altura), e o `h1` fica a ~374 px do topo
+em 320 px. Em 390 px (viewport 844) o `h1` está na primeira dobra. `off-centre` (WARN, 103 px × 121 px
+em 1366 px) e `ragged-edges` apareceram nesta medição e **não foram comparados com o build anterior**
+nessas larguras — a baseline antiga não os registra; o estouro de 280/300 px é o limite já conhecido.
+`npm audit`: 0 vulnerabilidades.
+
 ## O que o gate de design marcou e foi mantido de propósito
 
 A skill `design-taste-frontend` mede a página em um navegador real e proíbe um conjunto de padrões

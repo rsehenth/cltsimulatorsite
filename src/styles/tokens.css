@@ -72,7 +72,7 @@
   --fs-title: clamp(1.125rem, 1.9vw, 1.5rem);   /* cabeçalho de card e de painel */
   --fs-body: clamp(1rem, 1.05vw, 1.125rem);     /* leitura corrida */
   --fs-note: 0.9375rem;                         /* nota secundária, 15px */
-  --fs-data: 0.8125rem;                         /* rótulo de HUD, 13px — o piso, nunca menor */
+  --fs-data: 0.875rem;                          /* rótulo de HUD, 14px — o piso, nunca menor */
   --fs-stamp: clamp(1.25rem, 2.4vw, 1.75rem);   /* carimbo: 20px no piso, sempre texto de exibição */
 
   --lh-hero: 0.92;
