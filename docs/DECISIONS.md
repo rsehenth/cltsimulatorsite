@@ -91,7 +91,7 @@ escreve `noindex`. O site nunca publica um domínio que não foi confirmado.
 
 ### 11. Como a identidade do HTML de referência foi preservada (sem copiá-lo)
 
-`E:\RDImortal\Roadmap-v1-CLT.html` foi tratado como **documento de design, não como fonte para
+O roadmap de referência (`Roadmap-v1-CLT.html`, mantido fora deste repositório) foi tratado como **documento de design, não como fonte para
 colar**. O arquivo original permanece intacto (hash conferido), nenhuma linha de markup dele entrou
 no projeto, e nada foi escrito naquela pasta.
 

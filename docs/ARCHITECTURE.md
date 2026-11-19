@@ -97,8 +97,8 @@ Cada componente traz o próprio `<style>` com escopo; os utilitários compartilh
 ## Assets
 
 - `public/assets/branding/clt-logo.png` (960×480) e `clt-mark.png` (440×220): arte oficial do
-  projeto, copiada do material do jogo para dentro deste site. Os originais em `E:\RDImortal`
-  permanecem intactos e verificados por hash. O brasão (`clt-mark`) aparece na contracapa do rodapé;
+  projeto, copiada do material do jogo para dentro deste site. Os originais, mantidos fora
+  deste repositório, permanecem intactos e verificados por hash. O brasão (`clt-mark`) aparece na contracapa do rodapé;
   o cabeçalho fixo usa só o nome tipográfico — ver `DECISIONS.md` §23.
 - `favicon.svg` é vetor; `robots.txt` libera o index e deixa a linha de sitemap comentada até existir
   domínio.

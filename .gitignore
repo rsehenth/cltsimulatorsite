@@ -13,6 +13,19 @@ dist/
 .env.*
 !.env.example
 
+# credenciais e configuração local do Cloudflare
+.dev.vars
+.wrangler/
+*.pem
+*.key
+
+# configuração local de agentes de IA e saída de ferramentas
+.claude/
+.codex/
+.gemini/
+.cursor/
+graphify-out/
+
 # sistema operacional e editores
 .DS_Store
 Thumbs.db

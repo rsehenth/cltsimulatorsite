@@ -1,4 +1,4 @@
-/* Generated from the pixel sprite sheet authored for Roadmap-v1-CLT (E:/RDImortal).
+/* Generated from the pixel sprite sheet authored for Roadmap-v1-CLT.
    Grade 16x16, 1 caractere = 1 pixel, '.' = vazio. Edite aqui para mudar os ícones do site. */
 
 export const PALETTE = {

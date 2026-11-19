@@ -12,16 +12,43 @@ carteira de trabalho, carimbo, HUD, chapas, cantoneiras e tipografia de formulá
 
 ## Limites inegociáveis
 
-- **Raiz do projeto:** `D:\Testes\Projects\cltsimulator site`. Nenhum arquivo do site nasce fora dela.
-- **Referência somente leitura:** `E:\RDImortal\Roadmap-v1-CLT.html` e `E:\RDImortal\assets\*`.
-  Não alterar, não mover, não sobrescrever, **não criar arquivos novos dentro de `E:\RDImortal`**.
+- **Raiz do projeto:** a pasta deste repositório. Nenhum arquivo do site nasce fora dela.
+- **Referência somente leitura:** o material de design do jogo (roadmap em HTML e a pasta de assets),
+  mantido fora deste repositório; o caminho local fica com o mantenedor — pergunte, não procure.
+  Não alterar, não mover, não sobrescrever, **não criar arquivos novos nessa pasta**.
   Copiar um recurso para `public/assets/` é permitido, mantendo o original intacto e confirmado o direito de uso.
 - **Não acessar outros projetos** do computador, nem o código-fonte do jogo, por iniciativa própria.
 - **Não executar Git** sem pedido explícito. Sem commits, sem push, sem criação de repositório.
+  Quando houver pedido de commit/push, vale a seção "Public Repository & Sensitive Data Policy".
 - **Não fazer deploy** sem pedido explícito (ver `docs/CLOUDFLARE_DEPLOY.md`).
 - **Não instalar dependências** sem justificativa técnica registrada em `docs/DECISIONS.md`.
 - **Não conectar contas, domínios ou repositórios** sem autorização.
 - Na dúvida sobre qual pasta recebe um arquivo, **pergunte o caminho exato antes de criar**.
+
+## Public Repository & Sensitive Data Policy
+
+Este repositório é público (ou será). Vale para todo agente de IA — Claude, Codex, Gemini e quaisquer
+outros — e para contribuidores humanos. Este repositório contém **apenas o site promocional**; o jogo
+e seu material interno são um projeto privado e separado.
+
+1. Consulte o `.gitignore` **antes** de adicionar qualquer arquivo ao índice do Git.
+2. Nunca versione credenciais, tokens, chaves de API, arquivos `.env` reais, segredos pessoais ou
+   certificados privados.
+3. Nunca versione configuração específica da máquina, arquivos temporários, caches, relatórios
+   gerados ou caminhos absolutos do Windows (`C:\…`, `D:\…`, `Users\…`) em código, docs ou comentários.
+4. Nunca use `git add -f` para driblar o `.gitignore` sem autorização explícita.
+5. Nunca afrouxe uma regra do `.gitignore` só para fazer um arquivo entrar num commit.
+6. Revise os nomes dos arquivos em stage e o diff (`git status`, `git diff --staged`) antes de todo commit.
+7. Configuração de ambiente entra só como exemplo com placeholders (`.env.example`), nunca com valores reais.
+8. Arquivo já rastreado **não** é protegido pelo `.gitignore`: se algo local foi rastreado, pare de
+   rastrear (`git rm --cached`) e avise; nunca reescreva o histórico sem autorização explícita.
+9. Mantenha versionados os fontes reutilizáveis e a documentação legítima do projeto.
+10. Nunca copie código-fonte, documentos internos ou ativos de desenvolvimento do jogo CLT Simulator
+    para este repositório sem autorização explícita.
+11. Valide o direito de uso antes de adicionar ativos de terceiros ou proprietários.
+12. Em dúvida se um arquivo pode ser divulgado, **não o inclua** e sinalize para revisão.
+
+Configuração local de agentes (`.claude/`, `.codex/`, `.gemini/`, `.cursor/`) fica fora do Git.
 
 ## Verdades de conteúdo (nunca improvisar em cima delas)
 
